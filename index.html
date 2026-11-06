@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>AKPA Sociologi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: Duolingo-style lesson app. Home = a Mini Motorways road winding between one stop per lecture and a final exam round; lesson = one question per screen with a feedback sheet. Apple-style hairlines, grouped lists and continuous rounded corners. */
+:root{
+  --ground:#EFEDE8; --surface:#FFFFFF; --surface-2:#F7F6F3; --ink:#26282E; --muted:#7D8089;
+  --hair:rgba(38,40,46,.12); --road:#3B3E46; --road-edge:#2E3037;
+  --blue:#3D8BDB; --teal:#25AE9A; --yellow:#F2B33A; --red:#E5525C; --orange:#EF8445; --pink:#EE7EA8; --purple:#8B6FD6;
+  --good:#25AE9A; --bad:#E5525C;
+  --good-tint:#DDF3EF; --bad-tint:#FBE3E4; --sel-tint:#E3EEFA;
+  --f-round:ui-rounded,"SF Pro Rounded","Nunito",system-ui,sans-serif;
+  --f-text:-apple-system,BlinkMacSystemFont,"SF Pro Text","Nunito Sans","Segoe UI",Roboto,sans-serif;
+  --f-mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --r-lg:22px; --r-md:16px; --r-sm:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#17191D; --surface:#22252B; --surface-2:#1C1E23; --ink:#F1F1F3; --muted:#9A9EA7;
+  --hair:rgba(255,255,255,.12); --road:#454952; --road-edge:#2C2F35;
+  --blue:#5AA0EA; --teal:#33C2AD; --yellow:#F5BF55; --red:#F06A73; --orange:#F4985E; --pink:#F391B6; --purple:#9C84E2;
+  --good:#33C2AD; --bad:#F06A73; --good-tint:#163A34; --bad-tint:#41202A; --sel-tint:#1D3350; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#17191D; --surface:#22252B; --surface-2:#1C1E23; --ink:#F1F1F3; --muted:#9A9EA7;
+  --hair:rgba(255,255,255,.12); --road:#454952; --road-edge:#2C2F35;
+  --blue:#5AA0EA; --teal:#33C2AD; --yellow:#F5BF55; --red:#F06A73; --orange:#F4985E; --pink:#F391B6; --purple:#9C84E2;
+  --good:#33C2AD; --bad:#F06A73; --good-tint:#163A34; --bad-tint:#41202A; --sel-tint:#1D3350; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:16px/1.45 var(--f-text);-webkit-font-smoothing:antialiased;min-height:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ground)}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 160px}
+h1,h2,h3{font-family:var(--f-round);font-weight:800;margin:0;line-height:1.15;text-wrap:balance}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+svg.i{width:22px;height:22px;flex:none}
+
+/* top bar: Apple-style translucent, hairline under */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:4;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 8px;padding:12px max(16px,env(safe-area-inset-left,0px));
+  background:color-mix(in srgb,var(--ground) 82%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(18px);backdrop-filter:saturate(1.6) blur(18px);
+  border-bottom:.5px solid var(--hair)}
+.brand{font-family:var(--f-round);font-weight:900;font-size:19px;letter-spacing:-.01em}
+.brand small{display:block;font:600 12px var(--f-text);color:var(--muted);letter-spacing:0}
+.pills{display:flex;gap:6px}
+.pill{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:99px;font:800 15px var(--f-round);font-variant-numeric:tabular-nums}
+.pill.flame{color:var(--orange)} .pill.gem{color:var(--blue)} .pill.aim{color:var(--teal)}
+
+/* the road */
+.unit{margin:18px 0 6px;padding:16px 18px;border-radius:var(--r-lg);background:var(--blue);color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--blue) 70%,#000)}
+.unit h2{font-size:20px;color:#fff}
+.unit p{margin:2px 0 0;font-size:14px;opacity:.9}
+.map{position:relative;max-width:100%;margin:8px auto 18px}
+.map svg.road{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.stop{position:absolute;width:140px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),color-mix(in srgb,var(--c) 18%,var(--surface)) 0);box-shadow:0 0 0 5px var(--ground)}
+.node{width:76px;height:72px;border-radius:50%;border:none;display:grid;place-items:center;background:var(--c);color:#fff;
+  box-shadow:0 6px 0 color-mix(in srgb,var(--c) 68%,#000);transform:translateY(-3px);transition:transform .08s,box-shadow .08s}
+.node:active{transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--c) 68%,#000)}
+.node b{font:900 30px var(--f-round)}
+.stop.locked .node{background:color-mix(in srgb,var(--muted) 45%,var(--surface));box-shadow:0 6px 0 color-mix(in srgb,var(--muted) 60%,#000)}
+.stop.locked .ring{background:var(--surface-2)}
+.cap{font:800 15px var(--f-round);line-height:1.2}
+.stop .cap{background:var(--ground);padding:5px 10px 6px;border-radius:12px;position:relative}
+.cap span{display:block;font:600 12px var(--f-text);color:var(--muted);margin-top:2px}
+.star{position:absolute;top:-4px;right:20px;width:28px;height:28px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;color:#fff;box-shadow:0 2px 0 color-mix(in srgb,var(--yellow) 70%,#000)}
+
+/* grouped list (Apple) */
+.section-h{font:600 13px var(--f-text);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:22px 4px 8px}
+.group{background:var(--surface);border-radius:var(--r-md);overflow:hidden}
+.row{display:grid;grid-template-columns:12px 1fr auto;gap:12px;align-items:center;padding:12px 16px;position:relative}
+.row + .row::before{content:"";position:absolute;left:40px;right:0;top:0;border-top:.5px solid var(--hair)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
+.row .t{font-weight:600;min-width:0}
+.row .r{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:1px}
+.row .pct{font:800 17px var(--f-round);color:var(--red);font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:14px;padding:14px 16px;margin:0}
+.foot{margin:10px 4px 0;font-size:12px;color:var(--muted)}
+
+/* 3D buttons */
+.btn{border:none;border-radius:var(--r-md);padding:14px 20px;font:800 16px var(--f-round);letter-spacing:.04em;text-transform:uppercase;
+  background:var(--c,var(--blue));color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--c,var(--blue)) 68%,#000);transition:transform .06s,box-shadow .06s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--c,var(--blue)) 68%,#000)}
+.btn.wide{width:100%}
+.btn.plain{background:var(--surface);color:var(--blue);box-shadow:0 4px 0 var(--hair),inset 0 0 0 1.5px var(--hair)}
+.btn[disabled]{background:var(--surface-2);color:var(--muted);box-shadow:0 4px 0 var(--hair),inset 0 0 0 1.5px var(--hair);transform:none;cursor:not-allowed}
+.btn.good{--c:var(--good)} .btn.bad{--c:var(--bad)}
+.linkbtn{background:none;border:none;padding:6px 0;color:var(--blue);font-weight:600;font-size:15px}
+
+/* lesson */
+.lesson-top{display:flex;align-items:center;gap:14px;padding-block:16px 20px}
+.x{width:34px;height:34px;border-radius:50%;border:none;background:none;display:grid;place-items:center;color:var(--muted)}
+.bar{flex:1;height:16px;border-radius:99px;background:color-mix(in srgb,var(--muted) 22%,var(--surface));overflow:hidden}
+.bar i{display:block;height:100%;min-width:16px;border-radius:99px;background:var(--good);position:relative;transition:width .4s cubic-bezier(.3,1.4,.6,1)}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:99px;background:rgba(255,255,255,.35)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tag{font:700 12px var(--f-text);padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--c) 16%,var(--surface));color:color-mix(in srgb,var(--c) 75%,var(--ink))}
+.q{font-size:23px;line-height:1.28;margin:0 0 8px}
+.ctx{color:var(--ink);opacity:.82;margin:0 0 14px;font-size:15.5px}
+.ref{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);margin:0 0 20px}
+.tblwrap{overflow-x:auto;margin:0 0 16px;background:var(--surface);border-radius:var(--r-md);box-shadow:inset 0 0 0 .5px var(--hair)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:15px}
+th,td{padding:9px 12px;text-align:center;white-space:nowrap}
+th{font:600 12px var(--f-text);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+tbody tr{border-top:.5px solid var(--hair)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:center;text-align:left;padding:14px 16px;border-radius:var(--r-md);
+  background:var(--surface);border:2px solid var(--hair);box-shadow:0 4px 0 var(--hair);font-size:16px;line-height:1.35;transition:transform .06s}
+.opt:active:not([disabled]){transform:translateY(2px);box-shadow:0 2px 0 var(--hair)}
+.opt .k{width:30px;height:30px;border-radius:9px;border:2px solid var(--hair);display:grid;place-items:center;font:800 14px var(--f-round);color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--blue);background:var(--sel-tint);box-shadow:0 4px 0 var(--blue)}
+.opt[aria-pressed="true"] .k{border-color:var(--blue);color:var(--blue)}
+.opt.is-right{border-color:var(--good);background:var(--good-tint);box-shadow:0 4px 0 var(--good)}
+.opt.is-right .k{border-color:var(--good);color:var(--good)}
+.opt.is-wrong{border-color:var(--bad);background:var(--bad-tint);box-shadow:0 4px 0 var(--bad)}
+.opt.is-wrong .k{border-color:var(--bad);color:var(--bad)}
+.opt[disabled]{cursor:default}
+.numrow{display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:var(--r-md);border:2px solid var(--hair);padding:4px 16px 4px 4px}
+.numrow input{flex:1;min-width:0;font:800 24px var(--f-round);padding:12px;border:none;background:none;color:var(--ink)}
+.numrow input:focus{outline:none}
+.numrow:focus-within{border-color:var(--blue)}
+.numrow .unit-l{color:var(--muted);font-weight:600}
+textarea{width:100%;min-height:170px;font:16px/1.5 var(--f-text);padding:14px 16px;border-radius:var(--r-md);border:2px solid var(--hair);background:var(--surface);color:var(--ink);resize:vertical}
+textarea:focus{outline:none;border-color:var(--blue)}
+.pts{list-style:none;margin:14px 0 0;padding:0;background:var(--surface);border-radius:var(--r-md);overflow:hidden}
+.pts li + li label{border-top:.5px solid var(--hair)}
+.pts label{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;padding:12px 16px;cursor:pointer;font-size:15px}
+.pts input{width:22px;height:22px;margin:0;accent-color:var(--good)}
+.hint{font-size:13px;color:var(--muted);margin:10px 4px 0}
+
+/* sheet */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--ground);border-top:.5px solid var(--hair);
+  padding-top:16px;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:10px;max-height:62vh;overflow:auto}
+.sheet.good{background:var(--good-tint);border-top-color:transparent}
+.sheet.bad{background:var(--bad-tint);border-top-color:transparent}
+.sheet.card{background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.12);border-top:none}
+.verdict{display:flex;align-items:center;gap:10px;font:900 22px var(--f-round)}
+.verdict .badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff}
+.sheet.good .verdict{color:color-mix(in srgb,var(--good) 80%,var(--ink));--c:var(--good)}
+.sheet.bad .verdict{color:color-mix(in srgb,var(--bad) 85%,var(--ink));--c:var(--bad)}
+.fb{font-size:15.5px}
+.fb .lbl{display:block;font:800 12px var(--f-round);text-transform:uppercase;letter-spacing:.06em;opacity:.7;margin-bottom:2px}
+.fb.small{font-size:13px;color:var(--muted)}
+.lvl-card h3{font-size:22px;color:var(--c)}
+.lvl-card p{margin:4px 0 0;color:var(--muted)}
+.meter{height:8px;border-radius:99px;background:color-mix(in srgb,var(--c) 18%,var(--surface));overflow:hidden;margin:8px 0 2px}
+.meter i{display:block;height:100%;background:var(--c);border-radius:99px}
+.pop{animation:pop .25s cubic-bezier(.3,1.5,.6,1)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.slide{animation:slide .22s ease-out}
+@keyframes slide{from{transform:translateY(20px);opacity:.5}to{transform:none;opacity:1}}
+
+/* summary */
+.sum{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;padding-top:36px}
+.trophy{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:#fff;box-shadow:0 8px 0 color-mix(in srgb,var(--yellow) 68%,#000)}
+.trophy svg{width:60px;height:60px}
+.sum h2{font-size:30px;color:var(--yellow)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.tile{border-radius:var(--r-md);border:2px solid var(--c);overflow:hidden;background:var(--surface)}
+.tile .h{background:var(--c);color:#fff;font:800 11px var(--f-round);text-transform:uppercase;letter-spacing:.06em;padding:5px}
+.tile b{display:block;padding:10px 4px;font:900 22px var(--f-round);color:var(--c);font-variant-numeric:tabular-nums}
+.sum .group{width:100%;text-align:left}
+
+/* road + branch */
+.road-edge{fill:none;stroke:var(--road-edge);stroke-linecap:round}
+.road-top{fill:none;stroke:var(--road);stroke-linecap:round}
+.node.sm b{font-size:24px;letter-spacing:-.02em}
+/* extra training */
+.extras{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.xcard{background:var(--surface);border-radius:var(--r-lg);padding:18px 10px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;min-width:0}
+.xcard .ring{width:88px;height:88px;box-shadow:none}
+.xcard .node{width:70px;height:66px}
+/* figures */
+.fig{background:var(--surface);border-radius:var(--r-md);box-shadow:inset 0 0 0 .5px var(--hair);margin:0 0 16px;padding:10px 8px 6px;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;max-width:460px;margin:0 auto}
+.fig .ax{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+.fig .dash{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+.fig .dem{stroke:var(--blue);stroke-width:2.8;stroke-linecap:round}
+.fig .mr{stroke:var(--purple);stroke-width:2.2;stroke-linecap:round}
+.fig .mc{stroke:var(--orange);stroke-width:2.8;stroke-linecap:round}
+.fig .bud{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.fig .bud2{stroke:var(--blue);stroke-width:2.6;stroke-linecap:round}
+.fig .comp{stroke:var(--muted);stroke-width:2;stroke-dasharray:6 5}
+.fig .u1,.fig .u2{fill:none;stroke:var(--teal);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fig .u2{stroke-opacity:.75}
+.fig .shade{fill:var(--yellow);fill-opacity:.5;stroke:none}
+.fig .shade.ok{fill:var(--good);fill-opacity:.38}
+.fig .pt{fill:var(--ink)}
+.fig text{fill:var(--ink)}
+.fig .lbl{font:900 14px var(--f-round);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.fig .tick{font:600 11px var(--f-text);fill:var(--muted)}
+.fig .axl{font:700 12px var(--f-text);fill:var(--muted)}
+.fig .cl{font:700 11px var(--f-text);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.fig .t-dem{fill:var(--blue)} .fig .t-mr{fill:var(--purple)} .fig .t-mc{fill:var(--orange)} .fig .t-u{fill:var(--teal)}
+.numrow input.letters{text-transform:uppercase;letter-spacing:.18em}
+.numrow input.letters::placeholder{text-transform:none;letter-spacing:0}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:400px){.q{font-size:21px}.pill{padding:6px 6px}.brand small{display:none}}
+/* nya frågetyper */
+.tag.muted{--c:var(--muted)}
+.mrows{display:flex;flex-direction:column;gap:12px}
+.mrow{background:var(--surface);border-radius:var(--r-md);border:2px solid var(--hair);padding:12px 14px}
+.mrow .mt{font:800 16px var(--f-round)}
+.mrow .md{font-size:14px;color:var(--muted);margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:2px solid var(--hair);background:var(--surface-2);border-radius:99px;padding:6px 12px;font:700 13.5px var(--f-text);box-shadow:0 2px 0 var(--hair)}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--sel-tint);color:var(--blue);box-shadow:0 2px 0 var(--blue)}
+.chip.is-right{border-color:var(--good);background:var(--good-tint);color:color-mix(in srgb,var(--good) 70%,var(--ink));box-shadow:0 2px 0 var(--good)}
+.chip.is-wrong{border-color:var(--bad);background:var(--bad-tint);color:color-mix(in srgb,var(--bad) 75%,var(--ink));box-shadow:0 2px 0 var(--bad)}
+.chip[disabled]{cursor:default}
+.mrow.ok{border-color:var(--good)} .mrow.no{border-color:var(--bad)}
+.scale{display:flex;justify-content:space-between;font:700 12px var(--f-text);color:var(--muted);margin:0 2px 10px}
+.cloze{background:var(--surface);border-radius:var(--r-md);padding:16px;font-size:17px;line-height:2.1;margin:0 0 16px;box-shadow:inset 0 0 0 .5px var(--hair)}
+.blank{display:inline-block;min-width:96px;padding:0 10px;margin:0 2px;border:none;border-bottom:3px solid var(--muted);border-radius:8px 8px 2px 2px;background:var(--surface-2);font:800 15px var(--f-round);line-height:1.9;vertical-align:baseline;text-align:center}
+.blank.act{border-bottom-color:var(--blue);background:var(--sel-tint)}
+.blank.fill{color:var(--blue)}
+.blank.is-right{border-bottom-color:var(--good);background:var(--good-tint);color:color-mix(in srgb,var(--good) 70%,var(--ink))}
+.blank.is-wrong{border-bottom-color:var(--bad);background:var(--bad-tint);color:color-mix(in srgb,var(--bad) 75%,var(--ink))}
+.bank{display:flex;flex-wrap:wrap;gap:8px}
+.bank .chip{font-size:15px;padding:8px 14px}
+.bank .chip.used{opacity:.3}
+.step2{margin-top:22px;padding-top:18px;border-top:.5px solid var(--hair)}
+.step2 .q{font-size:19px}
+.stop.todo .node{background:var(--surface);color:var(--muted);box-shadow:0 6px 0 var(--hair),inset 0 0 0 2.5px var(--hair);border:2.5px dashed color-mix(in srgb,var(--muted) 60%,transparent)}
+.stop.todo .ring{background:var(--surface-2)}
+.count{font:900 34px var(--f-round);line-height:1;letter-spacing:-.02em}
+.unit .row2{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.unit .count small{display:block;font:700 12px var(--f-text);opacity:.85;letter-spacing:0;text-align:right}
+.lvls{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.lvls .lv{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.lvls .lv .meter{margin:0}
+.lvls .lv b{font:800 13px var(--f-round);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.xcard.locked .node{background:color-mix(in srgb,var(--muted) 45%,var(--surface));box-shadow:0 6px 0 color-mix(in srgb,var(--muted) 60%,#000)}
+.xcard.locked .ring{background:var(--surface-2)}
+</style>
+
+<div class="wrap" id="app"></div>
+<div class="sheet" id="sheet" hidden><div class="sheet-in" id="sheetIn"></div></div>
+
+<script>
+/* ================= KURSDATA =================
+   Uppdateras av Claude när en föreläsning eller ett quiz laddas upp.
+   Fält per fråga: id, f (föreläsning nr eller null), s (sidostopp: "t24" | "aberg" | null),
+   l (1 grund, 2 begrepp i fall, 3 tentanivå), t (begrepp), r (källa), type, chk (kontrollerad mot föreläsning),
+   mc: q,o,a | multi: q,o,a[] | tfw: q,a(bool),then{q,o,a,why} | match: q,cats,items[{t,d,a}],scale
+   cloze: q,text med {ord},extra[] | text: q,pts[] — plus why och alt (ny vinkel vid fel). */
+const COURSE={name:"Arbetsmarknadssociologi",brand:"AKPA Sociologi",exam:"2026-11-27",examTxt:"27 nov"};
+const LECT=[
+  /* {n:1,title:"…",date:"2026-11-xx"} — en rad per uppladdad föreläsning */
+];
+const SIDE={
+  t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."},
+  aberg:{name:"Åberg",g:"Å",c:"var(--orange)",size:8,desc:"Läsförståelse och argument om polariseringen av jobbstrukturen. Öppnas när artikeln är uppladdad."}
+};
+const T24="Tenta 24/25";
+const Q=[
+/* ---------- TENTA 24/25 · uppgift 1 (flerval) ---------- */
+{id:"t01",f:null,s:"t24",l:3,t:"Utbuds- och efterfrågeteorier",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken teori förklarar könslöneskillnader genom diskriminering och kulturella uppfattningar hos arbetsgivaren?",
+ o:["Efterfrågeteorier","Utbudsteorier","Neoklassisk ekonomisk teori"],a:0,
+ why:"Arbetsgivaren står för efterfrågan på arbetskraft. Förklaringar som bygger på vad arbetsgivaren tror eller gör (diskriminering, föreställningar om kön) är efterfrågeteorier. Utbudsteorier förklarar skillnaden med arbetstagarnas egna val, t.ex. utbildning och yrke.",
+ alt:"Fråga dig: vems beteende förklarar teorin? Chefen som väljer vem som får passen = efterfrågan. Bartendern som själv väljer bort helgpass = utbud."},
+{id:"t02",f:null,s:"t24",l:3,t:"Goldin",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken faktor bidrar enligt Goldin till större löneskillnader mellan könen?",
+ o:["Långa arbetstimmar","Mindre face-time arbete","Hög arbetsflexibilitet"],a:0,
+ why:"Goldin: många yrken belönar långa, oflexibla arbetstimmar och närvaro oproportionerligt mycket. Den som tar störst familjeansvar, oftast kvinnan, kan inte jobba så och tappar mer i lön än bara de förlorade timmarna.",
+ alt:"Mindre face-time och mer flexibilitet är lösningen hos Goldin, inte orsaken. Tänk på en bar där den som alltid tar sena helgpass får de bästa skiften: den som inte kan jobba sent förlorar mer än timmarna."},
+{id:"t03",f:null,s:"t24",l:3,t:"Goldin",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad är huvudfokus i Claudia Goldins teori om arbetsmarknadsflexibilitet?",
+ o:["Att ökad flexibilitet kan minska könslöneskillnader","Att ökad flexibilitet minskar produktiviteten på arbetsplatsen","Att flexibilitet bara spelar roll för könslöneskillnader om både kvinnor och män utnyttjar den"],a:0,
+ why:"Om arbetet kan organiseras så att det inte straffar den som jobbar färre eller flexiblare timmar, krymper löneskillnaden. Det är Goldins kärnpoäng.",
+ alt:"Koppla till förra frågan: om långa oflexibla timmar ökar gapet, vad minskar det då? Det omvända, flexibilitet."},
+{id:"t04",f:null,s:"t24",l:3,t:"Könslöneskillnader",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken faktor anses bidra till att könslöneskillnaderna är större i högkvalificerade yrken?",
+ o:["Konsekvenserna av kvinnors familjeansvar blir allvarligare i yrken med höga krav","Kvinnor arbetar deltid","Andelen kvinnor i högkvalificerade jobb har ökat de senaste 30 åren"],a:0,
+ why:"I yrken med höga krav på tid och tillgänglighet blir straffet för att dra ner störst. Familjeansvaret slår därför hårdast där, och gapet blir större.",
+ alt:"Deltid förklarar skillnader generellt, men frågan gäller varför skillnaden är just större i högkvalificerade yrken. Svaret måste säga något om de yrkena."},
+{id:"t05",f:null,s:"t24",l:3,t:"Maktresursansatsen",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad innebär maktresursansatsen inom arbetsmarknadsteori?",
+ o:["En teori som förklarar arbetsmarknadsrelationer genom maktfördelningen mellan olika sociala grupper","En strategi där arbetsgivare använder ekonomiska resurser för att styra arbetsmarknaden","En arbetsmarknadsstrategi som baseras på statlig intervention"],a:0,
+ why:"Ansatsen är en förklaringsteori, ingen strategi: arbetsmarknadens institutioner speglar hur makten är fördelad mellan grupper, främst löntagare och arbetsgivare. Starka fack ger t.ex. hög kollektivavtalstäckning.",
+ alt:"Två av alternativen beskriver strategier, alltså vad någon gör. Ansatsen förklarar varför arbetsmarknaden ser ut som den gör."},
+{id:"t06",f:null,s:"t24",l:3,t:"Arbetsmarknadsmodeller",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilket alternativ beskriver bäst den kontinentaleuropeiska arbetsmarknadsmodellen?",
+ o:["Relativt starkt lagstödd arbetsrätt och omfattande lagstiftning om anställningsskydd","Minimal statlig inblandning och låg regleringsgrad av arbetsförhållanden","Decentraliserade förhandlingar med låg inblandning av arbetsgivare"],a:0,
+ why:"Den kontinentala modellen reglerar mer genom lag. Den nordiska reglerar mer genom kollektivavtal mellan starka parter. Minimal reglering beskriver snarare den liberala modellen.",
+ alt:"Tre modeller: nordisk = avtal, kontinental = lag, liberal = marknad."},
+{id:"t07",f:null,s:"t24",l:3,t:"Arbetsmarknadsmodeller",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad är särskilt kännetecknande för den nordiska arbetsmarknadsmodellen?",
+ o:["Starka fackföreningar och hög kollektivavtalstäckningsgrad","Svaga fackföreningar och låg kollektivavtalstäckningsgrad","Centraliserade löneförhandlingar utan inblandning av fackföreningar"],a:0,
+ why:"Kärnan i den nordiska modellen är att parterna, fack och arbetsgivare, själva reglerar villkoren i kollektivavtal som täcker nästan alla anställda.",
+ alt:"Ditt jobb i baren regleras troligen av ett kollektivavtal (t.ex. för hotell och restaurang) och inte av en lag om lön. Det är den nordiska modellen."},
+{id:"t08",f:null,s:"t24",l:3,t:"Märket",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad innebär ”märket” i svenska löneförhandlingar?",
+ o:["En norm för löneökningar som sätts av industrisektorn och används som riktmärke i andra sektorer","Ett statligt fastställt lönetak som inte får överskridas","En minimilön som alla arbetsgivare är lagligt bundna att följa"],a:0,
+ why:"Den konkurrensutsatta industrin förhandlar först. Dess löneökning blir märket, normen som övriga avtal förhåller sig till. Staten sätter varken tak eller minimilön.",
+ alt:"Båda felalternativen handlar om staten. I den nordiska modellen sätter parterna lönerna, inte staten."},
+{id:"t09",f:null,s:"t24",l:3,t:"Exploatering och Goldthorpe",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad betyder exploatering och vilken roll har det i Goldthorpes klassteori?",
+ o:["En klass tillägnar sig mervärdet som en annan klass skapar. Goldthorpe betonar inte detta, vilket är en central skillnad mellan neo-marxistisk och neo-weberiansk klassteori","En klass tillägnar sig mervärdet som en annan klass skapar. Goldthorpe betonar detta, vilket är en central skillnad mellan neo-marxistisk och neo-weberiansk klassteori","En klass har en marknadsmässig fördel över en annan. Goldthorpe betonar detta, vilket är en likhet mellan neo-marxistisk teori och neoklassisk nationalekonomi"],a:0,
+ why:"Exploatering är ett marxistiskt begrepp och centralt för Wright. Goldthorpe är neo-weberian och utgår från anställningsrelationen, inte från exploatering. Just där skiljer sig skolorna.",
+ alt:"Marx/Wright: vem tar värdet som arbetet skapar? Weber/Goldthorpe: vilken sorts anställningskontrakt har du?"},
+{id:"t10",f:null,s:"t24",l:3,t:"Industriellt och IT-paradigm",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad är lösningen på det ”tekniska problemet” i det industriella paradigmet respektive IT-paradigmet?",
+ o:["Industriellt: kontroll. IT: anpassning","Industriellt: anpassning. IT: kontroll","Båda har anpassning som huvudsaklig lösning"],a:0,
+ why:"Industrin löste produktionen med kontroll: standardisering, planering och styrning ovanifrån. IT-paradigmet möter skiftande marknader med anpassning och flexibilitet.",
+ alt:"Löpande bandet är kontroll. En kod som ändras efter kundens önskemål varje vecka kräver anpassning."},
+{id:"t11",f:null,s:"t24",l:3,t:"Atkinson",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad innebär numerär flexibilitet?",
+ o:["Förmågan att ändra organisationens storlek","Möjligheten att ändra arbetsuppgifter","Flexibilitet i användningen av maskinell teknik"],a:0,
+ why:"Atkinson: numerär flexibilitet = ändra antalet anställda, t.ex. med visstid, inhyrda och timanställda. Att ändra vad de anställda gör är funktionell flexibilitet.",
+ alt:"Restaurangen som kallar in fler timanställda en fredag än en tisdag använder numerär flexibilitet: antalet varierar, inte uppgifterna."},
+{id:"t12",f:null,s:"t24",l:3,t:"Taylorism",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad karaktäriserar Taylorismens syn på arbetsorganisation?",
+ o:["Standardisering och effektivisering genom noggrann planering","Flexibilitet och anpassning efter skiftande marknader","Hög grad av autonomi och specialisering bland anställda"],a:0,
+ why:"Taylor ville hitta det bästa sättet att utföra varje moment, planerat av ledningen och utfört standardiserat. Planering skiljs från utförande, och den anställde får lite autonomi.",
+ alt:"Autonomi är motsatsen till Taylorism. Flexibilitet hör till senare paradigm."},
+{id:"t13",f:null,s:"t24",l:3,t:"Sociotekniska skolan",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken styrningsform betonas i den sociotekniska skolan?",
+ o:["Ömsesidig anpassning och självstyrande grupper","Direkt övervakning av arbetsprocessen","Trappstegsmodellen"],a:0,
+ why:"Den sociotekniska skolan vill anpassa tekniken och de sociala relationerna till varandra. Gruppen styr själv hur arbetet fördelas och utförs.",
+ alt:"Direkt övervakning är Taylor och Ford. Socioteknik är motreaktionen: ge gruppen kontroll."},
+{id:"t14",f:null,s:"t24",l:3,t:"Karasek",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Hur kan arbetsgivare bäst använda Karaseks modell för att förbättra de anställdas välbefinnande?",
+ o:["Balansera arbetskraven med egen kontroll och stöd","Öka arbetskraven och minska isolerade högstressarbeten","Minska kraven på de anställda"],a:0,
+ why:"Enligt krav–kontroll(–stöd)-modellen är höga krav inte farliga i sig. Det är höga krav tillsammans med låg kontroll och lite stöd som ger ohälsa. Att bara sänka kraven riskerar att ge passiva jobb.",
+ alt:"En fredagsrusch i baren går att hantera om du styr din station själv och kollegorna backar upp. Samma rusch med en chef som detaljstyr och ingen hjälp sliter."},
+{id:"t15",f:null,s:"t24",l:3,t:"Atkinson",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad innebär funktionsflexibilitet enligt Atkinsons modell?",
+ o:["Anpassning genom breddning av jobbens innehåll och arbetsrotation","Möjligheten att öka eller minska antalet anställda med kort varsel","Permanent reducering av arbetsstyrkans storlek"],a:0,
+ why:"Funktionell flexibilitet = samma personer gör fler sorters uppgifter. Kärnarbetskraften får det. Att ändra antalet är numerär flexibilitet.",
+ alt:"Bartendern som också kan stå i kassan och ta hand om bokningar när det behövs = funktionell flexibilitet."},
+{id:"t16",f:null,s:"t24",l:3,t:"McGregor",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Hur kan Fordism kopplas till McGregors teorier?",
+ o:["Den stödjer Teori X genom direktstyrning och yttre incitament","Den stödjer Teori Y genom att främja autonomi och initiativ","Den stödjer Teori Z som betonar sociala relationer"],a:0,
+ why:"Teori X antar att människor ogillar arbete och måste styras och belönas utifrån. Fordismens löpande band med detaljstyrning och lön som drivkraft passar den. Teori Y antar att människor söker ansvar.",
+ alt:"Teori Z är inte McGregors. Det räcker att skilja X (styr och kontrollera) från Y (lita på och ge ansvar)."},
+{id:"t17",f:null,s:"t24",l:3,t:"Karasek och självbestämmandeteori",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad är en central likhet mellan Karaseks krav–kontroll-modell och självbestämmandeteorin?",
+ o:["Båda ser arbetsmiljön som central och hur den präglas av utmaningar samt stöd, styrning och kontroll från överordnade","Båda pekar på strukturella förklaringar till ökat självbestämmande i samhället och individens kontrafaktiska val","Båda ser samspelet mellan arbetsmiljön och stabila personlighetsdrag som centralt för hälsa, motivation och prestation"],a:0,
+ why:"Båda teorierna förklarar utfall med hur arbetet är utformat: krav, kontroll och stöd hos Karasek, och om miljön stöder eller styr autonomin i självbestämmandeteorin. Ingen av dem bygger på stabila personlighetsdrag.",
+ alt:"Leta efter det gemensamma ordet: arbetsmiljö. Personlighetsdrag är en fälla: båda teorierna handlar om situationen, inte om personen."},
+{id:"t18",f:null,s:"t24",l:3,t:"Könssegregation och ohälsa",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken konsekvens av könssegregation kan kopplas till arbetsrelaterad ohälsa?",
+ o:["Kvinnor i kvinnodominerade yrken riskerar högre grad av psykisk ohälsa och stress","Män i mansdominerade yrken upplever lägre stressnivåer än kvinnor","Kvinnor i mansdominerade yrken rapporterar fler arbetsrelaterade skador"],a:0,
+ why:"Kvinnodominerade yrken (t.ex. vård, omsorg, skola) har ofta höga krav, låg kontroll och emotionellt krävande arbete. Det ger mer stress och psykisk ohälsa. Koppla till Karasek.",
+ alt:"Segregationen gör att kvinnor och män möter olika arbetsmiljöer. Fråga dig: vilka arbetsmiljöer har höga krav och låg kontroll?"},
+{id:"t19",f:null,s:"t24",l:3,t:"Arbetstillfredsställelse",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken är en central skiljelinje mellan teorierna om arbetstillfredsställelse på kursen (t.ex. Herzberg, Locke, Vroom, Adams)?",
+ o:["Att se människor som i grunden likartade i vad de uppskattar i arbetet, eller att erkänna att människor är olika i det avseendet","Teorier som bara fokuserar på materiella aspekter, eller teorier som även lyfter icke-materiella belöningar som prestige och status","Teorier från industrisamhället där alienation var centralt, eller teorier från IT-samhället om digitala aspekter av arbetet"],a:0,
+ why:"Vissa teorier (t.ex. Herzbergs) antar att samma faktorer gör alla nöjda. Andra (t.ex. Locke, Vroom) utgår från att det beror på vad individen själv värderar och förväntar sig.",
+ alt:"Fråga om två kollegor blir lika nöjda av samma sak. Svarar teorin ja eller ”det beror på personen”?"},
+{id:"t20",f:null,s:"t24",l:3,t:"Diskriminering",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilken typ av diskriminering bygger på att arbetsgivaren använder gruppinformation i brist på information om individen?",
+ o:["Statistisk diskriminering","Preferensdiskriminering","Implicit diskriminering"],a:0,
+ why:"Statistisk diskriminering: arbetsgivaren vet för lite om den sökande och använder gruppens genomsnitt i stället. Preferensdiskriminering: arbetsgivaren ogillar gruppen i sig.",
+ alt:"Nyckelordet är ”i brist på information”. Statistisk = gissar utifrån genomsnitt. Preferens = vill inte, oavsett information."},
+{id:"t21",f:null,s:"t24",l:3,t:"Intersektionalitet",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vad är en implikation av intersektionalitetsperspektivet på arbetsmarknadsutfall?",
+ o:["Kombinationer av klass, kön och etnicitet bör studeras för att förklara utfallen","Etnicitet är den mest betydande faktorn","Jämfört med klass är etnicitet en mer betydande faktor"],a:0,
+ why:"Intersektionalitet innebär att kategorierna samverkar. Ingen av dem rangordnas som den viktigaste.",
+ alt:"Båda felalternativen pekar ut en vinnare. Intersektionalitet handlar om korsningen, inte om en vinnare."},
+{id:"t22",f:null,s:"t24",l:3,t:"Tjänstesamhället",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Hur kan ekonomisk utveckling kopplas till efterfrågan på tjänster?",
+ o:["Tillväxt leder ofta till ökad efterfrågan på både personliga och professionella tjänster","Den ökar främst efterfrågan på grundläggande tjänster som mat och boende","Den minskar efterfrågan på tjänster eftersom konsumenterna blir mer självförsörjande"],a:0,
+ why:"Med högre inkomster köper hushåll och företag mer tjänster av alla slag, från restaurang och omsorg till konsulter och juridik. Det driver tjänstesektorns tillväxt.",
+ alt:"Varför fanns det fler cocktailbarer i Stockholm än för 50 år sedan? Folk har råd att köpa upplevelser och service i stället för att göra allt själva."},
+{id:"t23",f:null,s:"t24",l:3,t:"Självbestämmandeteori",r:T24+" · uppg. 1",type:"mc",chk:false,
+ q:"Vilket påstående beskriver skillnaden mellan autonom och kontrollerad motivation i självbestämmandeteorin?",
+ o:["Skillnaden är kontinuerlig: motivation varierar längs ett spektrum från helt autonom till helt kontrollerad","Skillnaden är absolut: en individ är antingen autonomt eller kontrollerat motiverad","Det finns ingen vetenskaplig konsensus om skillnaden är absolut eller kontinuerlig"],a:0,
+ why:"Självbestämmandeteorin är en skala: amotivation, yttre reglering, introjicerad, identifierad, integrerad, inre motivation. Därför kan man placera Stefan, Peter och Felix på olika ställen på den, som i uppgift 2.",
+ alt:"Om skillnaden var absolut skulle det inte gå att göra uppgiften där personer placeras ut på en skala."},
+{id:"t24",f:null,s:"t24",l:3,t:"Oesch",r:T24+" · uppg. 14",type:"mc",chk:false,
+ q:"Inom vilken klassteori förekommer resonemanget att klientorientering är ett viktigt incitament för arbete inom vissa klasser?",
+ o:["Oesch","Goldthorpe","Både Oesch och Goldthorpe"],a:0,
+ why:"Oesch delar in arbete efter arbetslogik. I den mellanmänskliga logiken (vård, undervisning, service) är relationen till klienten själva drivkraften. Goldthorpe utgår från anställningskontraktet och övervakningsproblemet.",
+ alt:"Klient = mellanmänsklig. Mellanmänsklig arbetslogik = Oesch."},
+/* ---------- uppgift 2: placera på skala ---------- */
+{id:"t30",f:null,s:"t24",l:3,t:"Självbestämmandeteori",r:T24+" · uppg. 2",type:"match",scale:true,chk:false,
+ q:"Placera personerna på självbestämmandeteorins skala.",
+ cats:["Amotivation","Yttre reglering","Introjicerad","Identifierad","Integrerad","Inre motivation"],
+ items:[{t:"Mårten",d:"Reklamutdelare som inte gör något alls, ingen kontrollerar honom.",a:0},
+  {t:"Göran",d:"Duschar patienterna bara när kollegan som kan rapportera honom är på jobbet.",a:1},
+  {t:"Felix",d:"Drivs av skuld och rädsla för att inte duga i pappas ögon.",a:2},
+  {t:"Stefan",d:"Jobbet har blivit tråkigt, men han förstår att det är viktigt och går dit av plikt.",a:3},
+  {t:"Peter",d:"Ser undervisningen som en del av sitt större mål och tar gärna på sig uppgiften.",a:4},
+  {t:"Jesper",d:"Analyserar börsen för att det är roligt i sig och glömmer att posta resultaten.",a:5}],
+ why:"Yttre reglering = belöning eller straff utifrån (Göran och kollegan). Introjicerad = inre press som skuld och skam (Felix). Identifierad = man ser värdet i uppgiften (Stefan). Integrerad = uppgiften är en del av ens värderingar och identitet (Peter). Inre = aktiviteten belönar sig själv (Jesper).",
+ alt:"Gå från vänster: ingen drivkraft → någon annan tvingar → jag tvingar mig själv → jag förstår varför → det är den jag är → det är kul i sig."},
+/* ---------- uppgift 3: klasscheman ---------- */
+{id:"t31",f:null,s:"t24",l:3,t:"Klasscheman",r:T24+" · uppg. 3",type:"match",chk:false,
+ q:"Vilket klasschema bygger på vilken dimension?",
+ cats:["Goldthorpe","Wright","Oesch"],
+ items:[{t:"Övervakningsproblem",d:"Hur lätt arbetet kan övervakas",a:0},
+  {t:"Humankapitalets specificitet",d:"Hur specifik den anställdas kunskap är för arbetsgivaren",a:0},
+  {t:"Ägande av produktionsmedel",a:1},
+  {t:"Auktoritet",d:"Över andra anställda",a:1},
+  {t:"Expertis och yrkesutbildning",a:1},
+  {t:"Arbetslogik",d:"Teknisk, organisatorisk, mellanmänsklig",a:2}],
+ why:"Goldthorpe: anställningskontraktet formas av hur svårt arbetet är att övervaka och hur specifikt humankapitalet är. Wright: ägande, auktoritet och expertis. Oesch: arbetslogik (teknisk, organisatorisk, mellanmänsklig) korsad med kompetensnivå.",
+ alt:"I tentans figur ligger auktoritet vid Wrights tabell (”chefer med yrkesutbildning”), och Oeschs tabell har kolumnerna teknisk, organisatorisk och mellanmänsklig."},
+/* ---------- uppgift 12: lojalitet och incitament ---------- */
+{id:"t32",f:null,s:"t24",l:3,t:"Organisationslojalitet",r:T24+" · uppg. 12",type:"match",chk:false,
+ q:"Vilken typ av incitament förklarar bäst vilken form av organisationslojalitet?",
+ cats:["Gåva som incitament","Indirekt kontroll som incitament"],
+ items:[{t:"Normativ organisationslojalitet",d:"Man stannar för att man känner sig förpliktad eller delar organisationens värden",a:0},
+  {t:"Instrumentell organisationslojalitet",d:"Man stannar för vad man får ut av det",a:1}],
+ why:"Gåvoutbyte bygger på ömsesidighet: arbetsgivaren ger mer än vad som krävs, och den anställde känner sig skyldig att ge tillbaka. Det är en norm, alltså normativ lojalitet. Indirekt kontroll styr med framtida befordran, karriär och belöningar, så det lönar sig att anstränga sig och stanna. Det är instrumentell lojalitet.",
+ alt:"Normativ = ”jag borde”. Gåva skapar ett ”jag borde ge tillbaka”. Instrumentell = ”det lönar sig”. Indirekt kontroll gör att det lönar sig."},
+/* ---------- uppgift 5–6 och 7–8: sant/falskt + varför ---------- */
+{id:"t40",f:null,s:"t24",l:3,t:"Könssegregering",r:T24+" · uppg. 5–6",type:"tfw",chk:false,
+ q:"Yrkessegregeringen mellan män och kvinnor har minskat markant både vertikalt och horisontellt de senaste decennierna, särskilt i arbetaryrken. Det beror främst på att män har ändrat sina yrkesval.",
+ a:false,
+ then:{q:"Varför är påståendet falskt?",
+  o:["Minskningen beror främst på att kvinnor har gått in i mansdominerade yrken, medan män i liten utsträckning har gått in i kvinnodominerade","Segregeringen har i själva verket ökat under de senaste decennierna","Minskningen beror främst på att kvinnodominerade yrken har försvunnit","Män har ändrat sina yrkesval, men bara vertikalt"],a:0,
+  why:"Det är kvinnorna som har ändrat sina yrkesval. Män stannar i högre grad kvar i mansdominerade yrken, delvis på grund av könssocialisering och att kvinnodominerade yrken har lägre lön och status."},
+ why:"Påståendet är falskt.",
+ alt:"På tentan ger motiveringen bara poäng om sant/falskt är rätt. Fråga dig: vem har rört sig in på den andres område?"},
+{id:"t41",f:null,s:"t24",l:3,t:"Humankapital utrikesfödda",r:T24+" · uppg. 7–8",type:"tfw",chk:false,
+ q:"Utrikes födda, särskilt de från Europa som har varit länge i Sverige, upplever ingen märkbar tillfällig förlust av sitt humankapital, eftersom deras utbildningar och erfarenheter är likvärdiga med humankapital som skaffats i Sverige.",
+ a:false,
+ then:{q:"Varför är påståendet falskt?",
+  o:["Humankapital är delvis landspecifikt (språk, nätverk, erkännande av utbildning) och kan inte föras över fullt ut, så en tillfällig förlust uppstår även för dessa grupper","Utbildningar från Europa är generellt sämre än svenska","Humankapitalet försvinner helt vid migration och kan aldrig återvinnas","Påståendet är sant eftersom utbildningar från EU erkänns automatiskt"],a:0,
+  why:"Delar av humankapitalet är landspecifika och går inte att ta med sig fullt ut: språk, kontakter, kunskap om arbetsmarknaden och värdering av examina. Därför uppstår en tillfällig förlust som minskar med tiden i landet."},
+ why:"Påståendet är falskt.",
+ alt:"Nyckelordet är ”ingen”. Det räcker att visa att det finns en tillfällig förlust även för den mest gynnade gruppen."},
+/* ---------- lucktext byggd på uppgift 1 ---------- */
+{id:"t50",f:null,s:"t24",l:3,t:"Arbetsorganisation",r:T24+" · uppg. 1 (lucktext)",type:"cloze",chk:false,
+ q:"Fyll i luckorna.",
+ text:"Enligt Atkinson innebär {numerär} flexibilitet att organisationens storlek ändras, medan {funktionell} flexibilitet betyder breddade arbetsuppgifter och arbetsrotation. Taylorismen bygger på {standardisering} och noggrann planering, och Fordismen passar McGregors {Teori X}. Den sociotekniska skolan betonar i stället {självstyrande grupper}.",
+ extra:["Teori Y","direkt övervakning","anpassning"],
+ why:"Numerär = antal, funktionell = innehåll. Taylor och Ford = standardisering och kontroll, alltså Teori X. Socioteknik = gruppen styr själv.",
+ alt:"Gör det i ordning: storlek → numerär. Innehåll → funktionell. Löpande band → Teori X. Motreaktionen → grupper."}
+];
+
+/* ================= MOTOR ================= */
+const LVL={1:"Grund",2:"Begrepp i fall",3:"Tentanivå"};
+const LCOL=["var(--blue)","var(--teal)","var(--yellow)","var(--pink)","var(--purple)","var(--orange)"];
+const TR={};
+LECT.forEach((x,i)=>TR["f"+x.n]={name:x.title,short:"F"+x.n,g:String(x.n),c:LCOL[i%LCOL.length],size:8,lect:x.n,
+  desc:"Grund → begrepp i fall → tentanivå. Varje omgång börjar där du är svagast."});
+Object.keys(SIDE).forEach(k=>TR[k]={...SIDE[k],short:SIDE[k].name});
+TR.final={name:"Tentarunda",short:"Tentarunda",g:"T",c:"var(--red)",size:10,
+  desc:"Blandade tentanivåfrågor från alla föreläsningar och gamla tentor, med samma frågetyper som på tentan."};
+const trackOf=q=>q.f?"f"+q.f:q.s;
+const byTrack=k=>k==="final"?Q.filter(q=>q.l===3&&q.s!=="aberg"):Q.filter(q=>trackOf(q)===k);
+
+/* ---------- state ---------- */
+const LS="akpa-soc-v1";
+let state={qs:{},xp:0,days:[],updated:0};
+let dbRef=null, syncNote="Sparas i den här webbläsaren";
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today=()=>ymd(new Date());
+function loadLocal(){try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s&&s.qs)state=s;}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(state));}catch(e){}}
+let chain=Promise.resolve(),dirty=false;
+function persist(){
+  state.updated=Date.now(); saveLocal();
+  if(!dbRef) return; dirty=true;
+  chain=chain.then(async()=>{ if(!dirty)return; dirty=false;
+    try{await dbRef.set(JSON.parse(JSON.stringify(state)));syncNote="Sparat och synkat";}
+    catch(e){syncNote="Kunde inte synka, sparat lokalt";}
+  });
+}
+async function initDb(){
+  try{
+    if(!window.claude||!window.claude.use) return;
+    const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    if(!db||!user) return;
+    const id=await user.id(); if(!id) return;
+    dbRef=db.doc("data/users/"+id+"/progress");
+    const snap=await dbRef.get();
+    if(snap.exists){const d=snap.data(); if(d&&d.qs&&(d.updated||0)>=(state.updated||0)){state=JSON.parse(JSON.stringify(d));saveLocal();}}
+    else if(state.updated) persist();
+    syncNote="Sparat och synkat";
+    if(screen==="home") render();
+  }catch(e){dbRef=null;}
+}
+const st=id=>state.qs[id]||(state.qs[id]={r:0,w:0,box:0,seen:0,last:0});
+function markDay(){const d=today();if(!state.days.includes(d)){state.days.push(d);state.days=state.days.slice(-90);}}
+function streak(){const set=new Set(state.days);let n=0;const d=new Date();
+  if(!set.has(today())) d.setDate(d.getDate()-1);
+  while(set.has(ymd(d))){n++;d.setDate(d.getDate()-1);} return n;}
+function daysLeft(){const [y,m,dd]=COURSE.exam.split("-").map(Number);const e=new Date(y,m-1,dd),t=new Date();t.setHours(0,0,0,0);return Math.round((e-t)/864e5);}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const masteryOf=qs=>qs.length?Math.round(100*qs.filter(q=>st(q.id).box>0).length/qs.length):0;
+const mastery=k=>masteryOf(byTrack(k));
+const unlocked=k=>byTrack(k).length>0;
+function accuracy(){let r=0,w=0;Object.values(state.qs).forEach(s=>{r+=s.r;w+=s.w;});return r+w?Math.round(100*r/(r+w)):null;}
+function weakTopics(){const m={};
+  Q.forEach(q=>{const s=state.qs[q.id];if(!s||!s.seen)return;const k=q.t;
+    (m[k]||(m[k]={t:k,r:0,w:0,open:0,refs:new Set()}));m[k].r+=s.r;m[k].w+=s.w;if(s.box===0&&s.w>0){m[k].open++;m[k].refs.add(q.r.split(" · ")[0]);}});
+  return Object.values(m).filter(x=>x.open>0).map(x=>({...x,rate:Math.round(100*x.w/(x.r+x.w))}))
+    .sort((a,b)=>b.open-a.open||b.rate-a.rate).slice(0,6);}
+const pickOne=a=>a[Math.floor(Math.random()*a.length)];
+const clozeAns=q=>[...q.text.matchAll(/\{([^}]+)\}/g)].map(m=>m[1]);
+
+const I={
+ flame:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.3c.4 3-1.3 4.6-2.7 6.2C8.4 10.1 7 11.7 7 14.3a5 5 0 0 0 10 0c0-1.7-.7-3-1.4-4 .1 1.3-.4 2.5-1.6 2.9.6-3.3-.3-7.6-1.4-10.9z"/></svg>',
+ gem:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9z"/></svg>',
+ aim:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/></svg>',
+ lock:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:30px;height:30px"><path d="M7 10V8a5 5 0 0 1 10 0v2h.5A1.5 1.5 0 0 1 19 11.5v8a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5v-8A1.5 1.5 0 0 1 6.5 10zm2.5 0h5V8a2.5 2.5 0 0 0-5 0z"/></svg>',
+ plus:'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+ star:'<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>',
+ check:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ cross:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+ close:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+ book:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>',
+ trophy:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h12v2h3v3a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 7.4 12H7a4 4 0 0 1-4-4V5h3zm0 4H5v1a2 2 0 0 0 1.2 1.8C6.1 9.2 6 8.6 6 8zm12 0v1c0 .6-.1 1.2-.2 1.8A2 2 0 0 0 19 8V7z"/></svg>'
+};
+
+/* ---------- screens ---------- */
+let screen="home", L=null;
+function render(){ screen==="home"?renderHome():screen==="lesson"?renderQ():renderSum(); }
+function topBar(){
+  const acc=accuracy(), n=LECT.length;
+  return `<header class="top"><div class="brand">${esc(COURSE.brand)}<small>Tenta ${esc(COURSE.examTxt)} · ${n?"F1–F"+n:"inga föreläsningar än"}</small></div>
+    <div class="pills"><span class="pill flame" title="Dagar i rad">${I.flame}${streak()}</span><span class="pill gem" title="XP">${I.gem}${state.xp}</span><span class="pill aim" title="Träffsäkerhet">${I.aim}${acc===null?"–":acc+"%"}</span></div></header>`;
+}
+function stopHtml(k,x,y){
+  if(k==="next"){const n=LECT.length+1;
+    return `<div class="stop todo" style="left:${x}px;top:${y-48}px;--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" aria-label="F${n}: inte uppladdad">${I.plus}</button></div>
+      <div class="cap">F${n}<span>Ladda upp i chatten</span></div></div>`;}
+  const t=TR[k],m=mastery(k),open=unlocked(k),done=m>=90,small=t.g.length>1;
+  return `<div class="stop ${open?"":"locked"}" style="left:${x}px;top:${y-48}px;--c:${t.c};--p:${open?m:0}">
+    <div class="ring"><button class="node${small?" sm":""}" data-lvl="${k}" aria-label="${esc(t.short)}: ${esc(t.name)}">${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
+    ${done?`<span class="star">${I.star}</span>`:""}
+    <div class="cap">${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}<span>${open?m+" % klart":"Inga frågor än"}</span></div></div>`;
+}
+function renderHome(){
+  hideSheet();
+  const keys=LECT.map(x=>"f"+x.n).concat(["next","final"]);
+  const X=[160,244,160,82], STEP=170, TOP=60, W=320;
+  const pts=keys.map((_,i)=>[X[i%4],TOP+i*STEP]);
+  let d=`M${pts[0][0]} ${pts[0][1]}`;
+  for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i];d+=` C${x0} ${y0+STEP*.55} ${x1} ${y1-STEP*.55} ${x1} ${y1}`;}
+  const H=TOP+(keys.length-1)*STEP+110;
+  const stops=keys.map((k,i)=>stopHtml(k,pts[i][0],pts[i][1])).join("");
+  const extra=Object.keys(SIDE).map(k=>{const t=TR[k],m=mastery(k),n=byTrack(k).length,open=n>0;
+    return `<div class="xcard${open?"":" locked"}" style="--c:${open?t.c:"var(--muted)"};--p:${m}"><div class="ring"><button class="node${t.g.length>1?" sm":""}" data-lvl="${k}" aria-label="${esc(t.name)}">${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
+      <div class="cap">${esc(t.name)}<span>${open?`${m} % klart · ${n} frågor`:"Inte uppladdad"}</span></div></div>`;}).join("");
+  const wk=weakTopics(), dl=daysLeft();
+  const wkHtml=wk.length?`<div class="group">${wk.map(w=>`<div class="row"><span class="dot"></span><span class="t">${esc(w.t)}<span class="r">${esc([...w.refs].join(", "))} · ${w.open} fråga${w.open>1?"r":""} kvar</span></span><span class="pct">${w.rate} %</span></div>`).join("")}</div>
+    <div style="margin-top:14px"><button class="btn wide" style="--c:var(--red)" data-weak="1">Träna svaga punkter</button></div>`
+    :`<div class="group"><p class="note">Begrepp du svarar fel på hamnar här. De försvinner när du svarar rätt direkt i en senare omgång.</p></div>`;
+  $("#app").innerHTML=`${topBar()}
+   <section class="unit"><div class="row2"><div><h2>${esc(COURSE.name)}</h2><p>${LECT.length} föreläsning${LECT.length===1?"":"ar"} · ${Q.length} frågor</p></div>
+     <div class="count">${dl>0?dl:dl===0?"Idag":"–"}<small>${dl>0?"dagar kvar":dl===0?"tenta":"tentan är gjord"}</small></div></div></section>
+   <section class="map" style="height:${H}px;width:${W}px" aria-label="Föreläsningar">
+     <svg class="road" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+       <path d="${d}" class="road-edge" stroke-width="26"/><path d="${d}" class="road-top" stroke-width="20"/>
+     </svg>${stops}</section>
+   <h3 class="section-h">Extra träning</h3><div class="extras">${extra}</div>
+   <h3 class="section-h">Svaga punkter</h3>${wkHtml}
+   <p class="foot">${esc(syncNote)}</p>`;
+  document.querySelectorAll("[data-lvl]").forEach(b=>b.onclick=()=>levelSheet(b.dataset.lvl));
+  const nx=$("[data-next]"); if(nx) nx.onclick=nextSheet;
+  const wb=$("[data-weak]"); if(wb) wb.onclick=()=>startLesson("weak");
+}
+function sheetOpen(html){const s=$("#sheet");s.hidden=false;s.className="sheet card slide";$("#sheetIn").innerHTML=html;$("#closeS").onclick=hideSheet;}
+function nextSheet(){
+  sheetOpen(`<div class="lvl-card" style="--c:var(--blue)"><h3>F${LECT.length+1} · inte uppladdad</h3>
+   <p>Ladda upp föreläsningen (PDF eller PowerPoint) och quizets screenshots i chatten. Då byggs frågorna och stoppet dyker upp här.</p></div>
+   <button class="linkbtn" id="closeS">Stäng</button>`);
+}
+function levelSheet(k){
+  const t=TR[k],qs=byTrack(k),m=masteryOf(qs),open=qs.length>0,n=qs.length,per=Math.min(t.size,n);
+  const lv=[1,2,3].filter(l=>qs.some(q=>q.l===l)).map(l=>{const p=masteryOf(qs.filter(q=>q.l===l));
+    return `<div class="lv"><span>${LVL[l]}</span><div class="meter"><i style="width:${p}%"></i></div><b>${p} %</b></div>`;}).join("");
+  sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>
+     ${t.lect&&lv?`<div class="lvls">${lv}</div>`:`<div class="meter"><i style="width:${m}%"></i></div>`}
+     <p style="font-size:13px">${open?`${m} % av ${n} frågor klara · ${per} frågor per omgång`:"Inga frågor än."}</p></div>
+   ${open?`<button class="btn wide" style="--c:${t.c}" id="go">${m?"Fortsätt":"Starta"}</button>`:""}
+   <button class="linkbtn" id="closeS">Stäng</button>`);
+  const g=$("#go"); if(g) g.onclick=()=>startLesson(k);
+}
+
+/* ---------- lesson ---------- */
+let queue=[],pos=0,total=0,correct=0,results=[],cur=null,sel=null,answered=false;
+const prio=q=>{const s=st(q.id);return (s.seen?1:0)*10+s.box*2+(s.last?(s.last/1e13):0)+Math.random()*0.5;};
+const textLast=a=>a.sort((x,y)=>(x.type==="text")-(y.type==="text"));
+function reviewFrom(k){
+  const older=Q.filter(q=>trackOf(q)!==k&&q.type!=="text"&&st(q.id).seen&&st(q.id).box===0);
+  return older.length?[{...pickOne(older),_review:true}]:[];
+}
+function pickFor(k){
+  const qs=byTrack(k), t=TR[k];
+  if(t.lect){
+    const lv=[1,2,3].filter(l=>qs.some(q=>q.l===l));
+    const curL=lv.find(l=>masteryOf(qs.filter(q=>q.l===l))<70)||lv[lv.length-1]||1;
+    const score=q=>prio(q)+(q.l>curL?(q.l-curL)*6:0)+(q.l<curL?3:0);
+    let pick=qs.filter(q=>q.type!=="text").sort((a,b)=>score(a)-score(b)).slice(0,7);
+    if(curL===3){const tx=qs.filter(q=>q.type==="text").sort((a,b)=>prio(a)-prio(b))[0];if(tx)pick.push(tx);}
+    pick=pick.concat(reviewFrom(k));
+    return textLast(pick.sort((a,b)=>a.l-b.l));
+  }
+  const tx=k==="final"?qs.filter(q=>q.type==="text").sort((a,b)=>prio(a)-prio(b)).slice(0,1):[];
+  const nt=qs.filter(q=>q.type!=="text").sort((a,b)=>prio(a)-prio(b)).slice(0,t.size-tx.length);
+  return textLast(shuffle(nt.concat(tx)));
+}
+function pickWeak(){
+  const w=Q.filter(q=>{const s=state.qs[q.id];return s&&s.w>0&&s.box===0;})
+    .sort((a,b)=>(st(b.id).w/(st(b.id).r+st(b.id).w))-(st(a.id).w/(st(a.id).r+st(a.id).w)));
+  return shuffle(w.slice(0,8));
+}
+function startLesson(k){
+  L=k; const qs=k==="weak"?pickWeak():pickFor(k);
+  if(!qs.length) return;
+  queue=qs.map(q=>({q,retry:false})); pos=0; total=qs.length; correct=0; results=[];
+  screen="lesson"; window.scrollTo(0,0); render();
+}
+const optBtn=(i,k,txt,grp)=>`<button class="opt" data-g="${grp||"a"}" data-i="${i}" aria-pressed="false"><span class="k">${k}</span><span>${esc(txt)}</span></button>`;
+function renderQ(){
+  hideSheet(); answered=false; sel=null; cur=queue[pos]; const q=cur.q, t=TR[trackOf(q)]||TR.final;
+  cur.phase=1; cur.multi=new Set(); cur.m=q.items?q.items.map(()=>null):null;
+  const pct=Math.round(100*correct/total);
+  let body="";
+  if(q.type==="mc"||q.type==="multi"){
+    cur.order=cur.order||shuffle(q.o.map((_,i)=>i));
+    body=`${q.type==="multi"?`<p class="hint" style="margin:0 4px 10px">Välj ${q.a.length} alternativ.</p>`:""}<div class="opts" role="group">${cur.order.map((oi,k)=>optBtn(oi,k+1,q.o[oi])).join("")}</div>`;
+  } else if(q.type==="tf"||q.type==="tfw"){
+    body=`<div class="opts" role="group">${optBtn(1,1,"Sant")}${optBtn(0,2,"Falskt")}</div><div id="step2"></div>`;
+  } else if(q.type==="match"){
+    cur.iorder=cur.iorder||shuffle(q.items.map((_,i)=>i));
+    body=`${q.scale?`<div class="scale"><span>← ${esc(q.cats[0])}</span><span>${esc(q.cats[q.cats.length-1])} →</span></div>`:""}
+     <div class="mrows">${cur.iorder.map(ii=>{const it=q.items[ii];return `<div class="mrow" data-row="${ii}"><div class="mt">${esc(it.t)}</div>${it.d?`<div class="md">${esc(it.d)}</div>`:""}
+       <div class="chips">${q.cats.map((c,ci)=>`<button class="chip" data-row="${ii}" data-c="${ci}" aria-pressed="false">${esc(c)}</button>`).join("")}</div></div>`;}).join("")}</div>`;
+  } else if(q.type==="cloze"){
+    const ans=clozeAns(q); cur.fill=ans.map(()=>null); cur.act=0;
+    cur.bank=cur.bank||shuffle(ans.concat(q.extra||[]));
+    let bi=0; const txt=esc(q.text).replace(/\{([^}]+)\}/g,()=>`<button class="blank" data-b="${bi++}">&nbsp;</button>`);
+    body=`<div class="cloze" id="cloze">${txt}</div><div class="bank" id="bank">${cur.bank.map((w,i)=>`<button class="chip" data-w="${i}">${esc(w)}</button>`).join("")}</div>`;
+  } else {
+    body=`<textarea id="txt" placeholder="Skriv ditt svar som på tentan, max 50–100 ord."></textarea>
+      <div id="ptsBox"></div><p class="hint">Skrivfråga. Jämför sedan med facitpunkterna och kryssa bara i det du faktiskt fick med.</p>`;
+  }
+  $("#app").innerHTML=`<div class="lesson-top"><button class="x" id="quit" aria-label="Avsluta omgången">${I.close}</button><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div></div>
+   <div class="tags"><span class="tag" style="--c:${t.c}">${esc(q.f?"F"+q.f:t.short)} · ${esc(q.t)}</span><span class="tag" style="--c:var(--blue)">${LVL[q.l]}</span>${cur.retry?`<span class="tag" style="--c:var(--red)">Ny chans</span>`:""}${q._review?`<span class="tag" style="--c:var(--purple)">Repetition</span>`:""}${q.chk===false?`<span class="tag muted">Ej kontrollerad mot föreläsning</span>`:""}</div>
+   ${q.ctx?`<p class="ctx">${esc(q.ctx)}</p>`:""}
+   <h2 class="q">${esc(q.q)}</h2>
+   <p class="ref">${I.book}<span>${esc(q.r)}</span></p>
+   ${body}`;
+  $("#quit").onclick=()=>{screen="home";persist();render();};
+  bindOpts("a");
+  document.querySelectorAll(".chip[data-row]").forEach(b=>b.onclick=()=>{if(answered)return;const r=+b.dataset.row;cur.m[r]=+b.dataset.c;
+    document.querySelectorAll(`.chip[data-row="${r}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));showCheck(cur.m.every(v=>v!==null));});
+  if(q.type==="cloze") bindCloze();
+  if(q.type==="text"){const t2=$("#txt");t2.oninput=()=>showCheck(t2.value.trim().length>10);}
+  showCheck(false);
+}
+function bindOpts(grp){
+  const q=cur.q;
+  document.querySelectorAll(`.opt[data-g="${grp}"]`).forEach(b=>b.onclick=()=>{if(answered)return;
+    const i=+b.dataset.i;
+    if(q.type==="multi"&&grp==="a"){cur.multi.has(i)?cur.multi.delete(i):cur.multi.add(i);b.setAttribute("aria-pressed",cur.multi.has(i)?"true":"false");showCheck(cur.multi.size===q.a.length);return;}
+    document.querySelectorAll(`.opt[data-g="${grp}"]`).forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");sel=i;showCheck(true);});
+}
+function bindCloze(){
+  const paint=()=>{document.querySelectorAll(".blank").forEach(b=>{const i=+b.dataset.b,w=cur.fill[i];
+      b.innerHTML=w===null?"&nbsp;":esc(cur.bank[w]);b.classList.toggle("fill",w!==null);b.classList.toggle("act",i===cur.act&&!answered);});
+    document.querySelectorAll("#bank .chip").forEach(c=>{const u=cur.fill.includes(+c.dataset.w);c.classList.toggle("used",u);c.disabled=u||answered;});
+    showCheck(cur.fill.every(v=>v!==null));};
+  document.querySelectorAll(".blank").forEach(b=>b.onclick=()=>{if(answered)return;const i=+b.dataset.b;cur.fill[i]=null;cur.act=i;paint();});
+  document.querySelectorAll("#bank .chip").forEach(c=>c.onclick=()=>{if(answered)return;
+    if(cur.act===null||cur.act<0)cur.act=cur.fill.indexOf(null); if(cur.act<0)return;
+    cur.fill[cur.act]=+c.dataset.w; const nx=cur.fill.indexOf(null); cur.act=nx; paint();});
+  cur.repaint=paint; paint();
+}
+function showCheck(enabled){
+  if(answered) return;
+  const s=$("#sheet"); s.hidden=false; s.className="sheet";
+  const lab=cur.q.type==="text"?"Jämför med facit":"Kontrollera";
+  $("#sheetIn").innerHTML=`<button class="btn wide good" id="check" ${enabled?"":"disabled"}>${lab}</button>`;
+  $("#check").onclick=check;
+}
+function hideSheet(){const s=$("#sheet");if(s){s.hidden=true;s.className="sheet";}}
+function markOpts(grp,isRight){
+  document.querySelectorAll(`.opt[data-g="${grp}"]`).forEach(b=>{b.disabled=true;const i=+b.dataset.i;
+    if(isRight(i))b.classList.add("is-right"); else if(b.getAttribute("aria-pressed")==="true")b.classList.add("is-wrong");});
+}
+function check(){
+  const q=cur.q; let ok,given;
+  if(q.type==="text") return showPoints();
+  if(q.type==="tfw"&&cur.phase===1){
+    const tfOk=(sel===1)===q.a; markOpts("a",i=>(i===1)===q.a);
+    if(!tfOk){answered=true;record(false,sel===1?"Sant":"Falskt");return feedback(false);}
+    cur.phase=2; sel=null; const t=q.then; cur.order2=shuffle(t.o.map((_,i)=>i));
+    $("#step2").innerHTML=`<div class="step2 slide"><span class="tag" style="--c:var(--good)">Rätt, ${q.a?"sant":"falskt"}. Nu motiveringen</span><h2 class="q" style="margin-top:10px">${esc(t.q)}</h2>
+      <div class="opts" role="group">${cur.order2.map((oi,k)=>optBtn(oi,k+1,t.o[oi],"b")).join("")}</div></div>`;
+    bindOpts("b"); showCheck(false); $("#step2").scrollIntoView({behavior:"smooth",block:"start"}); return;
+  }
+  answered=true;
+  if(q.type==="mc"){ok=sel===q.a;given=q.o[sel];markOpts("a",i=>i===q.a);}
+  else if(q.type==="multi"){const A=new Set(q.a);ok=cur.multi.size===A.size&&[...cur.multi].every(i=>A.has(i));given=[...cur.multi].map(i=>q.o[i]).join(" | ");markOpts("a",i=>A.has(i));}
+  else if(q.type==="tf"){ok=(sel===1)===q.a;given=sel===1?"Sant":"Falskt";markOpts("a",i=>(i===1)===q.a);}
+  else if(q.type==="tfw"){ok=sel===q.then.a;given="Motivering: "+q.then.o[sel];markOpts("b",i=>i===q.then.a);}
+  else if(q.type==="match"){ok=q.items.every((it,i)=>cur.m[i]===it.a);given=q.items.map((it,i)=>it.t+"→"+q.cats[cur.m[i]]).join(", ");
+    document.querySelectorAll(".chip[data-row]").forEach(b=>{b.disabled=true;const r=+b.dataset.row,c=+b.dataset.c;
+      if(c===q.items[r].a)b.classList.add("is-right"); else if(cur.m[r]===c)b.classList.add("is-wrong");});
+    document.querySelectorAll(".mrow").forEach(r=>{const i=+r.dataset.row;r.classList.add(cur.m[i]===q.items[i].a?"ok":"no");});}
+  else if(q.type==="cloze"){const ans=clozeAns(q);ok=ans.every((a,i)=>cur.bank[cur.fill[i]]===a);given=cur.fill.map(w=>cur.bank[w]).join(", ");
+    cur.repaint(); document.querySelectorAll(".blank").forEach(b=>{const i=+b.dataset.b;b.disabled=true;b.classList.remove("act","fill");b.classList.add(cur.bank[cur.fill[i]]===ans[i]?"is-right":"is-wrong");});}
+  record(ok,given); feedback(ok);
+}
+function showPoints(){
+  answered=true; $("#txt").readOnly=true;
+  $("#ptsBox").innerHTML=`<ul class="pts">${cur.q.pts.map((p,i)=>`<li><label><input type="checkbox" id="pt${i}"><span>${esc(p)}</span></label></li>`).join("")}</ul>`;
+  const s=$("#sheet"); s.className="sheet";
+  $("#sheetIn").innerHTML=`<button class="btn wide" id="grade">Klar med rättningen</button>`;
+  $("#grade").onclick=()=>{
+    const n=cur.q.pts.length,got=cur.q.pts.filter((_,i)=>$("#pt"+i).checked).length;
+    const missing=cur.q.pts.filter((_,i)=>!$("#pt"+i).checked);
+    document.querySelectorAll(".pts input").forEach(i=>i.disabled=true);
+    const ok=got===n; record(ok,`${got}/${n} punkter`,true); feedback(ok,{got,n,missing});
+  };
+  $("#ptsBox").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function record(ok,given,isText){
+  const q=cur.q,s=st(q.id); s.seen++; s.last=Date.now(); markDay();
+  if(ok){s.r++; if(!cur.retry) s.box=Math.min(s.box+1,5); state.xp+=cur.retry?5:10; correct++;}
+  else {s.w++; s.box=0; s.lw=String(given).slice(0,200);
+    if(!isText && queue.filter(x=>x.q.id===q.id).length<3) queue.push({q,retry:true});
+    if(isText) correct++; }
+  results.push({q,ok,retry:cur.retry});
+  persist();
+}
+function feedback(ok,txt){
+  const q=cur.q,s=$("#sheet"); s.hidden=false; s.className="sheet "+(ok?"good":"bad")+" slide";
+  let right="";
+  if(!ok){
+    if(q.type==="mc") right=q.o[q.a];
+    if(q.type==="multi") right=q.a.map(i=>q.o[i]).join(" · ");
+    if(q.type==="tf") right=q.a?"Sant":"Falskt";
+    if(q.type==="tfw") right=(q.a?"Sant":"Falskt")+". "+q.then.o[q.then.a];
+    if(q.type==="match") right=q.items.filter((it,i)=>cur.m[i]!==it.a).map(it=>it.t+" → "+q.cats[it.a]).join("<br>");
+    if(q.type==="cloze") right=clozeAns(q).join(" · ");
+  }
+  const rightHtml=right?`<div class="fb"><span class="lbl">Rätt svar</span>${q.type==="match"?right.split("<br>").map(esc).join("<br>"):esc(right)}</div>`:"";
+  const why=q.type==="tfw"?q.then.why:q.why;
+  let verdict=ok?pickOne(["Rätt!","Snyggt!","Precis.","Helt rätt."]):"Inte riktigt", main;
+  if(q.type==="text"){
+    verdict=ok?"Fullpoängssvar":txt.got?`Delvis rätt, ${txt.got} av ${txt.n}`:"Facitpunkterna saknas";
+    main=ok?`<div class="fb">Alla facitpunkter finns med.</div>`:`<div class="fb"><span class="lbl">Saknas för full poäng</span>${txt.missing.map(m=>"• "+esc(m)).join("<br>")}</div><div class="fb"><span class="lbl">Tips</span>${esc(q.alt)}</div>`;
+  } else main=ok?`<div class="fb">${esc(why)}</div>`:`${rightHtml}<div class="fb"><span class="lbl">Varför</span>${esc(why)}</div><div class="fb"><span class="lbl">Ny vinkel</span>${esc(q.alt)}</div>`;
+  $("#sheetIn").innerHTML=`<div class="verdict pop"><span class="badge">${ok?I.check:I.cross}</span>${verdict}</div>${main}
+    <div class="fb small">${esc(q.r)}${q.chk===false?" · facit ej kontrollerat mot föreläsning":""}${!ok&&q.type!=="text"?" · frågan kommer tillbaka":""}</div>
+    <button class="btn wide ${ok?"good":"bad"}" id="next">Fortsätt</button>`;
+  $("#next").onclick=next; $("#next").focus();
+  const bar=document.querySelector(".bar i"); if(bar) bar.style.width=Math.round(100*correct/total)+"%";
+}
+function next(){ pos++; if(pos>=queue.length){screen="sum";render();} else {window.scrollTo(0,0);renderQ();} }
+function renderSum(){
+  hideSheet();
+  const first=results.filter(r=>!r.retry), firstOk=first.filter(r=>r.ok).length;
+  const missed=[...new Map(results.filter(r=>!r.ok).map(r=>[r.q.id,r.q])).values()];
+  const pct=first.length?Math.round(100*firstOk/first.length):0;
+  const xp=results.reduce((s,r)=>s+(r.ok?(r.retry?5:10):0),0);
+  $("#app").innerHTML=`<section class="sum">
+    <div class="trophy pop">${I.trophy}</div>
+    <h2>${pct>=80?"Starkt pass!":pct>=50?"Omgången klar!":"Bra att du såg det nu"}</h2>
+    <div class="tiles">
+      <div class="tile" style="--c:var(--yellow)"><div class="h">XP</div><b>+${xp}</b></div>
+      <div class="tile" style="--c:var(--teal)"><div class="h">Rätt direkt</div><b>${pct}%</b></div>
+      <div class="tile" style="--c:var(--orange)"><div class="h">Dagar</div><b>${streak()}</b></div>
+    </div>
+    ${missed.length?`<div style="width:100%;text-align:left"><h3 class="section-h">Repetera</h3><div class="group">${missed.map(q=>`<div class="row"><span class="dot"></span><span class="t">${esc(q.t)}<span class="r">${esc(q.r)}</span></span><span></span></div>`).join("")}</div><p class="foot">Står kvar som svaga tills du svarar rätt direkt i en senare omgång.</p></div>`:""}
+    <button class="btn wide good" id="home">Fortsätt</button>
+    ${L!=="weak"?`<button class="btn wide plain" id="again">Kör en omgång till</button>`:""}
+  </section>`;
+  $("#home").onclick=()=>{screen="home";render();};
+  const a=$("#again"); if(a) a.onclick=()=>startLesson(L);
+}
+document.addEventListener("keydown",e=>{
+  if(screen!=="lesson")return;
+  if(e.target.tagName==="TEXTAREA")return;
+  if(/^[1-4]$/.test(e.key)&&!answered){const g=cur&&cur.phase===2?"b":"a";const b=document.querySelectorAll(`.opt[data-g="${g}"]`)[+e.key-1];if(b)b.click();}
+  if(e.key==="Enter"){const n=$("#next")||$("#check");if(n&&!n.disabled){e.preventDefault();n.click();}}
+});
+loadLocal(); render(); initDb();
+</script>
+
+</body>
+</html>
