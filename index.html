@@ -262,8 +262,7 @@ const LECT=[
   {n:3,title:"Klassanalys"}
 ];
 const SIDE={
-  t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."},
-  aberg:{name:"Åberg",g:"Å",c:"var(--orange)",size:8,desc:"Läsförståelse och argument om polariseringen av jobbstrukturen. Öppnas när artikeln är uppladdad."}
+  t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."}
 };
 const T24="Tenta 24/25";
 const Q=[
@@ -940,8 +939,8 @@ function topBar(){
 }
 function stopHtml(k,x,y){
   if(k==="next"){const n=LECT.length+1;
-    return `<div class="stop todo" style="left:${x}px;top:${y-48}px;--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" aria-label="F${n}: inte uppladdad">${I.plus}</button></div>
-      <div class="cap">F${n}<span>Ladda upp i chatten</span></div></div>`;}
+    return `<div class="stop todo" style="left:${x}px;top:${y-48}px;--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" aria-label="F${n}: coming soon">${I.plus}</button></div>
+      <div class="cap">F${n}<span>Coming soon :)</span></div></div>`;}
   const t=TR[k],m=mastery(k),open=unlocked(k),done=m>=90,small=t.g.length>1;
   return `<div class="stop ${open?"":"locked"}" style="left:${x}px;top:${y-48}px;--c:${t.c};--p:${open?m:0}">
     <div class="ring"><button class="node${small?" sm":""}" data-lvl="${k}" aria-label="${esc(t.short)}: ${esc(t.name)}">${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
@@ -980,8 +979,8 @@ function renderHome(){
 }
 function sheetOpen(html){const s=$("#sheet");s.hidden=false;s.className="sheet card slide";$("#sheetIn").innerHTML=html;$("#closeS").onclick=hideSheet;}
 function nextSheet(){
-  sheetOpen(`<div class="lvl-card" style="--c:var(--blue)"><h3>F${LECT.length+1} · inte uppladdad</h3>
-   <p>Ladda upp föreläsningen (PDF eller PowerPoint) och quizets screenshots i chatten. Då byggs frågorna och stoppet dyker upp här.</p></div>
+  sheetOpen(`<div class="lvl-card" style="--c:var(--blue)"><h3>F${LECT.length+1}</h3>
+   <p>Coming soon :)</p></div>
    <button class="linkbtn" id="closeS">Stäng</button>`);
 }
 function levelSheet(k){
