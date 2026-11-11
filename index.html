@@ -146,7 +146,7 @@ textarea:focus{outline:none;border-color:var(--blue)}
   padding-top:16px;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .sheet-in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:10px;max-height:62vh;overflow:auto}
-.sheet-in #next,.sheet-in #grade{position:sticky;bottom:0;flex:none}
+.sheet-in #next,.sheet-in #grade,.sheet-in #go{position:sticky;bottom:0;flex:none}
 .sheet.good{background:var(--good-tint);border-top-color:transparent}
 .sheet.bad{background:var(--bad-tint);border-top-color:transparent}
 .sheet.card{background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.12);border-top:none}
@@ -269,6 +269,10 @@ textarea:focus{outline:none;border-color:var(--blue)}
 .score{font:900 46px var(--f-round);line-height:1;color:var(--ink)}
 .score small{font-size:20px;color:var(--muted)}
 .exrow .r b{color:var(--ink)}
+.plist{margin:12px 0 4px;text-align:left}
+.plist b{display:block;font:800 13px var(--f-round);color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.03em}
+.prow{padding:8px 0;border-top:.5px solid var(--hair);font-size:13.5px;line-height:1.35;color:var(--muted)}
+.prow span{display:block;font-weight:700;color:var(--ink);font-size:14.5px}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -289,7 +293,8 @@ const LECT=[
   {n:4,title:"Teknik, kunskap och anställningar"}
 ];
 const SIDE={
-  t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."}
+  t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."},
+  pers:{name:"Personer",g:"P",c:"var(--pink)",size:10,desc:"Alla personer från föreläsningarna: vem sa vad, och vad förknippas de med. Fylls på när nya föreläsningar kommer."}
 };
 const T24="Tenta 24/25";
 const Q=[
@@ -1132,6 +1137,106 @@ function weakTopics(){const m={};
 const pickOne=a=>a[Math.floor(Math.random()*a.length)];
 const clozeAns=q=>[...q.text.matchAll(/\{([^}]+)\}/g)].map(m=>m[1]);
 
+/* ================= PERSONER =================
+   Alla personer som tagits upp på föreläsningarna. Ny föreläsning → lägg till personerna här.
+   Fält: id, n (namn), f (föreläsning där personen tas upp först), b (bilder), k (kort idé, används i frågorna),
+   why (förklaring), ex (andra personer som inte får vara felalternativ eftersom idéerna överlappar).
+   Frågorna (Vem? / Vad? / Para ihop) byggs automatiskt och ligger i sidostoppet "Personer". */
+const PERS=[
+ {id:"durkheim",n:"Émile Durkheim",f:1,b:"F1 bild 6",
+  k:"Arbetsdelningen gör oss beroende av varandra och arbetsnormer håller ihop samhället",
+  why:"Durkheim: arbetsdelningen ökar beroendet mellan människor. Normen att alla drar sitt strå till stacken blir ett samhällskitt. Anomie är när man saknar funktion och gemenskap."},
+ {id:"marx",n:"Karl Marx",f:1,b:"F1 bild 6 · F3 bild 22–23",ex:["wright"],
+  k:"Arbetsdelningen urholkar den inre arbetsviljan och gör arbetaren alienerad och exploaterad",
+  why:"Marx (F1): arbetsdelningen gör människan till ett utbytbart kugghjul, alienerad och exploaterad. I F3 är marxistisk klassteori byggd på exploatering och konflikten mellan kapitalägare och arbetare."},
+ {id:"weber",n:"Max Weber",f:1,b:"F1 bild 7 · F3 bild 22, 24",ex:["goldthorpe"],
+  k:"Arbetsvilja kan växa ur ideologi, som protestantisk arbetsetik, men riskerar en järnbur",
+  why:"Weber (F1): stark arbetsvilja kan komma ur idéer, t.ex. lutheransk arbetsetik (”spirit of capitalism”), men riskerar att bli mekanisk – rationalitetens järnbur. I F3: en social klass är de lägen mellan vilka mobilitet lätt sker."},
+ {id:"herzberg",n:"Frederick Herzberg",f:1,b:"F1 bild 10 · F2 bild 15",
+  k:"Behovsteori: yttre incitament som lön och trygghet först, sedan inre motivation",
+  why:"Herzberg: basala behov (trygga kontrakt, tillräcklig lön) måste uppfyllas först. Därefter motiverar utmaningar och självförverkligande mest. Behoven ses som givna och lika för alla."},
+ {id:"locke",n:"Edwin Locke",f:1,b:"F1 bild 11",
+  k:"Behov är inte givna av naturen utan rationella värderingar som skiljer sig mellan individer",
+  why:"Locke: behov är inte naturgivna utan rationella värderingar. Individen har en preferens för vad som är viktigast (t.ex. lön eller meningsfulla uppgifter) och försöker uppnå det."},
+ {id:"vroom",n:"Victor Vroom",f:1,b:"F1 bild 11",
+  k:"Människan justerar sin preferens efter vad som upplevs möjligt att uppnå",
+  why:"Vroom: förväntningar styr. Om det utmanande jobbet känns ouppnåeligt satsar man på något som är tillräckligt bra, t.ex. schyssta kollegor."},
+ {id:"adams",n:"J. Stacy Adams",f:1,b:"F1 bild 11",
+  k:"Värderingar formas av relativa jämförelser med vad kollegor och andra får",
+  why:"Adams: rättvisa och jämförelser. Får kollegorna högre lön eller roligare uppgifter vill jag också ha det."},
+ {id:"karasek",n:"Robert Karasek",f:1,b:"F1 bild 20 · F4 bild 18, 25",
+  k:"Krav–kontroll-modellen: höga krav och låg egenkontroll ger högstressjobb",
+  why:"Karasek: fyra jobbtyper efter krav och kontroll – lågstress, aktiva, passiva och högstress (job strain). Höga krav plus lågt beslutsutrymme är mest skadligt."},
+ {id:"mcgregor",n:"Douglas McGregor",f:2,b:"F2 bild 14",
+  k:"X- och Y-teori: ledarens syn på om människor arbetar av yttre eller inre skäl",
+  why:"McGregor: X-ledaren tror att människor arbetar för yttre belöningar och så lite som möjligt → kontroll uppifrån. Y-ledaren tror på inre motivation → autonomi och frihet."},
+ {id:"deci",n:"Deci & Ryan",f:2,b:"F2 bild 15–18 · Gagné & Deci 2005",ex:["pink"],
+  k:"Självbestämmandeteori: kompetens, autonomi och samhörighet driver inre motivation",
+  why:"Deci & Ryan (SDT): människan söker främst utmaningar (kompetens), fritt utforskande (autonomi) och samhörighet. Kontrollerande belöningar urholkar den inre motivationen."},
+ {id:"pink",n:"Dan Pink",f:2,b:"F2 bild 15",ex:["deci"],
+  k:"Bästsäljaren ”Drive” som sprider självbestämmandeteorin till modernt Y-ledarskap",
+  why:"Dan Pink nämns som exempel på hur SDT blivit viktig för modern Y-ledarskapsteori, genom bästsäljaren ”Drive”."},
+ {id:"taylor",n:"Frederick Taylor",f:2,b:"F2 bild 19 · F4 bild 14",
+  k:"Rationell arbetsledning: arbetet delas i små standardiserade moment som förmän styr",
+  why:"Taylorism: öka effektiviteten genom standardisering och uppdelning i små beståndsdelar, förmän som styr, övervakning och disciplin. Bygger på X-teori."},
+ {id:"ford",n:"Henry Ford",f:2,b:"F2 bild 20 · F4 bild 14",
+  k:"Rationell arbetsledning plus löpande bandet, där maskinen styr arbetstakten",
+  why:"Fordism: taylorismen kombinerad med löpande bandet. Tekniken styr arbetet så mycket som möjligt."},
+ {id:"treiman",n:"Donald Treiman",f:3,b:"F3 bild 3, 10",
+  k:"Yrkens rangordning i status och prestige är stabil oavsett hur den mäts",
+  why:"Treiman-konstanten: yrken rangordnas ungefär lika oavsett mätform – prestige, status, umgänge eller giftermål. Läkare hamnar högt i alla mått."},
+ {id:"goldthorpe",n:"John Goldthorpe",f:3,b:"F3 bild 25–27, 30",ex:["weber"],
+  k:"Övervakningsmöjligheter och organisationsspecifik kompetens ger olika anställningskontrakt",
+  why:"Goldthorpe (neo-weberian): arbete som är lätt att övervaka ger arbetskontrakt (direkt kontroll), svårövervakat arbete med organisationsspecifik kompetens ger tjänsterelation (indirekt kontroll). Grund för ESeC."},
+ {id:"wright",n:"Erik Olin Wright",f:3,b:"F3 bild 25, 28–30",ex:["marx"],
+  k:"Konflikten mellan arbetsgivare och löntagare, med auktoritet och expertnivå bland anställda",
+  why:"Wright (neo-marxist): konflikten mellan arbetsgivare och löntagare förklarar klasserna. Bland anställda delas klasser efter auktoritet (underställda) och expertnivå (utbildningskrav). Kunskapen är generell."},
+ {id:"bell",n:"Daniel Bell",f:4,b:"F4 bild 2",ex:["westsyk"],
+  k:"Förutspådde på 1970-talet att kunskap blir viktigaste resursen i en meritokrati",
+  why:"Bell: kunskap och skicklighet blir viktigare än fysiskt kapital. Meritokrati – ansvar efter förmåga i stället för tradition och kapital – och klassbakgrund minskar i betydelse."},
+ {id:"baumol",n:"William Baumol",f:4,b:"F4 bild 7",
+  k:"Trodde att det främst var försäljning och personliga tjänster som skulle växa",
+  why:"I F4 ställs frågan vilka servicejobb som växer: försäljning av olika slag, som Baumol trodde, eller något annat. Svaret på kursen: främst människoinriktade tjänster (vård, utbildning)."},
+ {id:"westsyk",n:"Westerman & Syk",f:4,b:"F4 bild 3, 22",ex:["bell"],
+  k:"Yrken som kräver högskola växer och arbetet blir mindre detaljstyrt över tid",
+  why:"Westerman & Syk och Syk 2022 (LNU-data): högskoleyrken växer, arbetet blir mindre detaljstyrt och den fysiska arbetsmiljön förbättras (för män)."},
+ {id:"gillberg",n:"Nanna Gillberg",f:4,b:"F4 bild 26",
+  k:"Gränslösa portföljkarriärer, där man gör karriär genom att byta jobb",
+  why:"Gillberg: från interna till externa arbetsmarknader – gränslösa karriärstrategier (portföljkarriärer) och karriär genom jobbyten."},
+ {id:"oesch",n:"Daniel Oesch",f:4,b:"F4 bild 30–33",
+  k:"Klassschema med arbetslogik: teknisk, organisatorisk och mellanmänsklig",
+  why:"Oesch lägger till en horisontell dimension – arbetslogik (teknisk, organisatorisk, mellanmänsklig) – utöver den vertikala kvalifikationsnivån, för att förstå det växande tjänstesamhället."}
+];
+(function buildPersQ(){
+  const nb=p=>PERS.filter(o=>o!==p&&!(p.ex||[]).includes(o.id)&&!(o.ex||[]).includes(p.id));
+  const near=(p,arr)=>arr.slice().sort((a,b)=>Math.abs(a.f-p.f)-Math.abs(b.f-p.f)||Math.random()-.5).slice(0,3);
+  const opts=(right,wrong)=>{const o=shuffle([right].concat(wrong));return {o,a:o.indexOf(right)};};
+  PERS.forEach(p=>{
+    const d=near(p,nb(p)), r="Personer · "+p.b;
+    const a=opts(p.n,d.map(x=>x.n));
+    Q.push({id:"p-"+p.id+"-1",f:null,s:"pers",l:1,t:p.n,r,type:"mc",chk:true,
+      q:"Vem förknippas med: "+p.k.charAt(0).toLowerCase()+p.k.slice(1)+"?",o:a.o,a:a.a,why:p.why,
+      alt:p.n+" (F"+p.f+"): "+p.k+"."});
+    const d2=near(p,nb(p)), b=opts(p.k,d2.map(x=>x.k));
+    Q.push({id:"p-"+p.id+"-2",f:null,s:"pers",l:2,t:p.n,r,type:"mc",chk:true,
+      q:"Vad förknippas "+p.n+" med?",o:b.o,a:b.a,why:p.why,
+      alt:"Tänk på vilken föreläsning "+p.n+" kom upp i: F"+p.f+" ("+(LECT.find(x=>x.n===p.f)||{}).title+")."});
+  });
+  LECT.forEach(L0=>{
+    const ps=PERS.filter(p=>p.f===L0.n&&p.id!=="pink");
+    for(let i=0;i<ps.length;i+=4){
+      let g=ps.slice(i,i+4); if(g.length<3&&ps.length>=3) g=ps.slice(-3);
+      if(g.length<2) continue;
+      Q.push({id:"p-match-f"+L0.n+"-"+(i/4+1),f:null,s:"pers",l:3,t:"Personer F"+L0.n,r:"Personer · F"+L0.n,type:"match",chk:true,
+        q:"Para ihop personen med idén (F"+L0.n+" · "+L0.title+").",cats:g.map(p=>p.n),
+        items:g.map((p,j)=>({t:p.k,a:j})),
+        why:g.map(p=>p.why).join(" "),
+        alt:g.map(p=>p.n+": "+p.k).join(" · ")});
+    }
+  });
+})();
+
+
 const I={
  flame:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.3c.4 3-1.3 4.6-2.7 6.2C8.4 10.1 7 11.7 7 14.3a5 5 0 0 0 10 0c0-1.7-.7-3-1.4-4 .1 1.3-.4 2.5-1.6 2.9.6-3.3-.3-7.6-1.4-10.9z"/></svg>',
  gem:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9z"/></svg>',
@@ -1227,7 +1332,8 @@ function levelSheet(k){
   const t=TR[k],qs=byTrack(k),m=masteryOf(qs),open=qs.length>0,n=qs.length,per=Math.min(t.size,n);
   const lv=[1,2,3].filter(l=>qs.some(q=>q.l===l)).map(l=>{const p=masteryOf(qs.filter(q=>q.l===l));
     return `<div class="lv"><span>${LVL[l]}</span><div class="meter"><i style="width:${p}%"></i></div><b>${p} %</b></div>`;}).join("");
-  sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>
+  const plist=k==="pers"?LECT.map(x=>{const ps=PERS.filter(p=>p.f===x.n);return ps.length?`<div class="plist"><b>F${x.n} · ${esc(x.title)}</b>${ps.map(p=>`<div class="prow"><span>${esc(p.n)}</span>${esc(p.k)}</div>`).join("")}</div>`:"";}).join(""):"";
+  sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>${plist}
      ${t.lect&&lv?`<div class="lvls">${lv}</div>`:`<div class="meter"><i style="width:${m}%"></i></div>`}
      <p style="font-size:13px">${open?`${m} % av ${n} frågor klara · ${per} frågor per omgång`:"Inga frågor än."}</p></div>
    ${open?`<button class="btn wide" style="--c:${t.c}" id="go">${m?"Fortsätt":"Starta"}</button>`:""}
