@@ -273,6 +273,13 @@ textarea:focus{outline:none;border-color:var(--blue)}
 .plist b{display:block;font:800 13px var(--f-round);color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.03em}
 .prow{padding:8px 0;border-top:.5px solid var(--hair);font-size:13.5px;line-height:1.35;color:var(--muted)}
 .prow span{display:block;font-weight:700;color:var(--ink);font-size:14.5px}
+.opt span:last-child,.fb{white-space:pre-line}
+.parts{display:flex;flex-direction:column;gap:12px;margin:14px 0 4px;text-align:left}
+.part{padding:12px 0 2px;border-top:.5px solid var(--hair)}
+.part .ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.part .ph b{font:800 16px var(--f-round);color:var(--ink)}
+.part .ph span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.part p{font-size:13.5px;margin:4px 0 10px}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -294,7 +301,9 @@ const LECT=[
 ];
 const SIDE={
   t24:{name:"Tenta 24/25",g:"24",c:"var(--purple)",size:10,desc:"Frågor från tentan 6 december 2024. Flyttas in i rätt föreläsning när den laddas upp."},
-  sem1:{name:"Seminarium 1",g:"S1",c:"var(--orange)",size:10,desc:"Diskussions- och instuderingsfrågorna från seminarium 1: motivation, lojalitet, SDT, arbetsorganisation, klassteori och strukturförändringar. Svaren bygger på föreläsningarna och litteraturen."},
+  sem1:{name:"Seminarium 1",g:"S1",c:"var(--orange)",size:10,desc:"Motivation, lojalitet, SDT, arbetsorganisation, klassteori och strukturförändringar. Två delmoment, eller blanda båda.",
+   parts:[{p:"disk",name:"Diskussionsfrågor",desc:"Diskussions- och instuderingsfrågorna, med blandade frågetyper. Svaren bygger på föreläsningarna, litteraturen och quizets facit."},
+    {p:"quiz",name:"Quiz",desc:"Lärarens quiz till seminariet: 35 frågor med två alternativ och facit från Canvas."}]},
   pers:{name:"Personer",g:"P",c:"var(--pink)",size:10,desc:"Alla personer från föreläsningarna: vem sa vad, och vad förknippas de med. Fylls på när nya föreläsningar kommer."}
 };
 const T24="Tenta 24/25";
@@ -1119,14 +1128,15 @@ Q.push(
   {t:"Upplever sig skyldig organisationen något",a:2}],
  why:"F1: affektiv = samma känslor och mål, instrumentell = det lönar sig, normativ = skuld eller plikt.",
  alt:"Affekt = känsla. Instrument = verktyg för egen vinning. Norm = plikt."},
-{id:"s1-07",f:null,s:"sem1",l:3,t:"Lojalitet och styrning",r:"Seminarium 1 · fråga 1e · F2 bild 10–11 · F3 bild 19–20",type:"match",chk:true,
- q:"Vilken lojalitet hänger främst ihop med vilken styrning?",
- cats:["Affektiv","Instrumentell","Normativ"],
- items:[{t:"Normativ styrning: de anställda internaliserar organisationens värderingar",a:0},
-  {t:"Osynliga kontrakt: löften om befordringar och löneökningar",a:1},
-  {t:"Gåvokultur: trygg anställning som man känner att man ska betala tillbaka",a:2}],
- why:"Normativ styrning vill att de anställda ska vilja samma sak som organisationen (affektiv). Osynliga kontrakt och framtida belöningar ger en lojalitet som lönar sig (instrumentell). Gåvan i form av långsiktig anställning skapar en känsla av skuld att göra ett extra bra jobb (normativ lojalitet).",
- alt:"Obs: normativ styrning ≠ normativ lojalitet. Styrningen siktar på värderingar (affektiv), lojaliteten handlar om skuld."},
+{id:"s1-07",f:null,s:"sem1",l:3,t:"Lojalitet och styrning",r:"Seminarium 1 · fråga 1e · quiz fråga 6 · F2 bild 10–11 · F3 bild 19–20",type:"match",chk:true,
+ q:"Vilken organisationslojalitet hänger främst ihop med vilken styrning?",
+ cats:["Instrumentell","Affektiv och normativ"],
+ items:[{t:"Psykologiska kontrakt: löften om befordran, bonus och löneförhöjning",a:0},
+  {t:"Trygg anställning till den som stannar och anstränger sig",a:0},
+  {t:"Normativ styrning: de anställda ska göra organisationens mål till sina egna",a:1},
+  {t:"Styrning som vädjar till känslor och värderingar, inte till materiella fördelar",a:1}],
+ why:"Quizets facit: psykologiska kontrakt (befordran, bonus, löneförhöjning, trygg anställning) ger instrumentell lojalitet. Normativ styrning, där de anställda ska anamma organisationens mål oberoende av materiella fördelar, appellerar till känslor och värderingar och kopplas till både affektiv och normativ lojalitet. F3 lägger till gåvokulturen: en långsiktig anställning som känns som en gåva ger skuld att betala tillbaka (normativ lojalitet).",
+ alt:"Det som lönar sig → instrumentell. Det som handlar om känslor och värderingar → affektiv och normativ."},
 /* --- SDT --- */
 {id:"s1-08",f:null,s:"sem1",l:2,t:"SDT:s dimensioner",r:"Seminarium 1 · fråga 2a · Gagné & Deci 2005 · F2 bild 17–18",type:"mc",chk:true,
  q:"Vilken är den centrala dimensionen i Gagné & Decis typologi över motivationstyper?",
@@ -1166,8 +1176,9 @@ Q.push(
  items:[{t:"Specialisering på en uppgift är effektivt",a:0},
   {t:"Enkla uppgifter gör personalen lätt att lära upp och byta ut",a:0},
   {t:"Ledningen kan styra, samordna och kontrollera arbetet",a:1},
-  {t:"Planering och beslut samlas hos specialister i stället för spontana beslut",a:1}],
- why:"Hög horisontell arbetsdelning ger effektivitet genom specialisering och standardisering, och gör arbetare utbytbara. Hög vertikal arbetsdelning ger styrning och samordning ovanifrån – i taylorismen ersätts arbetarens egna beslut av instrumentella kalkyler.",
+  {t:"Planering och beslut samlas hos specialister i stället för spontana beslut",a:1},
+  {t:"Mindre utrymme för misstag och för att smita undan uppgifter",a:1}],
+ why:"Hög horisontell arbetsdelning ger effektivitet genom specialisering och standardisering, och gör arbetare utbytbara. Hög vertikal arbetsdelning ger styrning och samordning ovanifrån: mindre utrymme för misstag och smitning, och arbetsledaren ser helheten (quizets facit). I taylorismen ersätts arbetarens egna beslut av instrumentella kalkyler.",
  alt:"Horisontellt handlar om uppgifterna. Vertikalt handlar om makten över uppgifterna."},
 {id:"s1-13",f:null,s:"sem1",l:2,t:"Arbetsdelning, autonomi och lärande",r:"Seminarium 1 · fråga 3d–e · F2 bild 6, 26 · F1 bild 20",type:"tfw",chk:true,
  q:"Hög arbetsdelning i både horisontell och vertikal bemärkelse ger arbetstagaren låg autonomi och små möjligheter att lära sig nytt i arbetet.",
@@ -1177,17 +1188,17 @@ Q.push(
    "Många uppgifter gör att man inte hinner lära sig något ordentligt, och hierarkin ger stress",
    "Hög arbetsdelning ger höga krav, och enligt Karasek minskar höga krav alltid lärandet",
    "Specialister lär sig mindre än generalister, men får ändå större beslutsutrymme i hierarkin"],a:0,
-  why:"Horisontellt: en eller få uppgifter ger lite variation och lärande. Vertikalt: planering och beslut ligger hos andra, så egenkontrollen blir låg. Därför vill den socio-tekniska organisationen minska båda (utvidgning och berikning)."},
+  why:"Horisontellt: en eller få uppgifter ger lite variation och lärande. Vertikalt: planering och beslut ligger hos andra, så egenkontrollen blir låg. Därför vill den socio-tekniska organisationen minska båda (utvidgning och berikning). Quizets motargument: för mycket variation kan göra en till en hoppjerka som aldrig lär sig något ordentligt."},
  why:"Påståendet är sant.",
  alt:"Tänk på ett löpande band: en uppgift, och förmannen bestämmer."},
 {id:"s1-14",f:null,s:"sem1",l:3,t:"Organisationsformer och arbetsdelning",r:"Seminarium 1 · fråga 3f · F2 bild 19–22, 26",type:"match",chk:true,
  q:"Hur präglas organisationsformerna av arbetsdelning?",
- cats:["Hög horisontell och hög vertikal","Låg horisontell och låg vertikal","Specialister i tydliga hierarkier med regelstyrning"],
+ cats:["Hög horisontell och hög vertikal","Låg horisontell och låg vertikal","Oklar på båda: ansvarsområden, regler och hierarkier"],
  items:[{t:"Tayloristisk organisation",a:0},
   {t:"Socio-teknisk organisation",a:1},
   {t:"Byråkratisk organisation",a:2}],
- why:"Taylorism: arbetet delas i små moment och förmän styr – högt på båda. Socio-teknisk: arbetsutvidgning och arbetsberikning – lågt på båda. Byråkrati: specialister och hierarkier (högt vertikalt och specialiserat), men med regelstyrning och eget ansvar att reglerna följs i stället för detaljstyrning.",
- alt:"Byråkratin skiljer sig från taylorismen genom att styrningen sker med regler, inte med förman och löpande band."},
+ why:"Taylorism: arbetet delas i små moment och förmän styr – högt på båda. Socio-teknisk: arbetsutvidgning och arbetsberikning – lågt på båda. Byråkrati: oklar på båda enligt quizets facit – specialisering i avgränsade ansvarsområden snarare än uppgifter (horisontellt), och eget ansvar med regelstyrning i stället för direkta order, men tydliga hierarkier (vertikalt).",
+ alt:"Byråkratin styr med regler, inte med förman och löpande band – därför går den inte att placera som hög eller låg."},
 {id:"s1-15",f:null,s:"sem1",l:2,t:"Autonomi och motivation (SDT)",r:"Seminarium 1 · fråga 3g · F2 bild 15–16",type:"mc",chk:true,
  q:"Hur hänger egenkontroll och autonomi ihop med arbetsmotivation enligt självbestämmandeteorin?",
  o:["Autonomi är ett grundbehov, och en miljö som ger autonomi stärker den inre motivationen",
@@ -1265,7 +1276,7 @@ Q.push(
   "För att mäta ägande av produktionsmedel bättre än Wright, särskilt bland småföretagare och egenanställda i gigekonomin",
   "För att ersätta den vertikala indelningen efter utbildning med en indelning efter lön",
   "För att visa att arbetarklassen har försvunnit och att alla anställda numera är tjänstemän"],a:0,
- why:"Klassteorin byggdes för industrisamhället. När service- och tjänstemannaklasserna växer behövs en dimension som skiljer t.ex. en företagsledare från en universitetslärare. Arbetslogiken (teknisk, organisatorisk, mellanmänsklig) förklarar skillnader i värderingar, politiska skiljelinjer och styrning. Lågkvalificerade servicejobb finns kvar, så arbetarklassen har inte försvunnit.",
+ why:"Klassteorin byggdes för industrisamhället. När service- och tjänstemannaklasserna växer behövs en dimension som skiljer t.ex. en företagsledare från en universitetslärare. Arbetslogiken (teknisk, organisatorisk, mellanmänsklig) förklarar skillnader i värderingar, politiska skiljelinjer och styrning. Den visar också varför omställning är svår: tillväxten i människoinriktad service kan inte friktionsfritt ersätta jobben som försvinner i industrin (quizets facit). Lågkvalificerade servicejobb finns kvar, så arbetarklassen har inte försvunnit.",
  alt:"Det ”nya medelklassproblemet” i F4."},
 {id:"s1-25",f:null,s:"sem1",l:3,t:"Drivkrafter hos Oesch",r:"Seminarium 1 · fråga 4m · F4 bild 32 · Oesch 2006 tabell 1",type:"match",chk:true,
  q:"Oesch: vad är de övre klassernas primära orientering i varje arbetslogik?",
@@ -1277,11 +1288,11 @@ Q.push(
  alt:"Ingenjören, chefen och läraren – vem är de lojala mot?"},
 {id:"s1-26",f:null,s:"sem1",l:3,t:"Hinder hos Oesch",r:"Seminarium 1 · fråga 4n · Oesch 2006",type:"mc",chk:true,
  q:"Vad hindrar främst rörlighet mellan klasser i Oeschs schema?",
- o:["Skillnader i säljbar kompetens (utbildning) och att arbetslogikerna kräver olika slags kunnande",
+ o:["Att varje klass kräver sina kunskaper och förmågor och präglas av sina orienteringar och värderingar",
   "Att anställningskontrakten för tjänstemän bara går att få via interna arbetsmarknader där redan anställda prioriteras",
   "Att ägandet av kapital är koncentrerat till en liten grupp kapitalägare",
   "Att yrkens prestige är densamma i alla länder och därför inte går att förändra"],a:0,
- why:"Oesch delar in efter säljbar kompetens (vertikalt) och arbetslogik (horisontellt). Utbildningskrav är hindret uppåt, och kompetenserna skiljer sig mellan logikerna (t.ex. tekniskt kunnande mot kommunikativa färdigheter). Interna arbetsmarknader = Goldthorpe, kapital = Wright, prestige = Treiman.",
+ why:"Quizets facit: orienteringar och värderingar, kunskaper och förmågor som krävs i en viss klass hindrar förflyttningar. Oesch delar in efter säljbar kompetens (vertikalt) och arbetslogik (horisontellt), så hindren finns både uppåt och i sidled (t.ex. tekniskt kunnande mot kommunikativa färdigheter). Interna arbetsmarknader = Goldthorpe, kapital = Wright, prestige = Treiman.",
  alt:"Oeschs tabell 1: ”skill requirements” skiljer sig åt mellan de tre logikerna."},
 /* --- 5. Strukturförändringar --- */
 {id:"s1-27",f:null,s:"sem1",l:1,t:"Strukturförändringar",r:"Seminarium 1 · fråga 5a · F4 bild 2–4 · Westerman & Syk",type:"multi",chk:true,
@@ -1291,11 +1302,11 @@ Q.push(
  alt:"F4: kunskapssamhället och tjänstesamhället."},
 {id:"s1-28",f:null,s:"sem1",l:2,t:"IT-revolutionen",r:"Seminarium 1 · fråga 5b · F4 bild 10, 16, 20 · Westerman & Syk",type:"mc",chk:true,
  q:"Hur påverkar IT-revolutionen strukturförändringarna?",
- o:["Datorer ersätter rutinuppgifter och höjer kvalifikationskraven, särskilt i marknadstjänster",
+ o:["Trenderna består: små flexibla organisationer gynnas, och det skapas både enkla och avancerade servicejobb",
   "IT gör att servicejobb blir lika lätta att automatisera som industrijobb, så tjänstesektorn krymper",
   "IT ökar framför allt antalet rutinjobb i industrin, eftersom maskinerna kräver fler operatörer",
   "IT har haft liten effekt, eftersom paradigmskiften bara gäller ångkraft och elektricitet"],a:0,
- why:"IT är ett tekniskt paradigmskifte. Maskiner och datorer ersätter rutinuppgifter, och efterfrågan på analytiska uppgifter ökar. IT höjer produktiviteten i t.ex. finans- och företagstjänster och driver där på uppgraderingen. Det kräver också flexibilitet och livslångt lärande.",
+ why:"Quizets facit: båda tendenserna består, men med IT-paradigmet minskar fördelen med standardisering och stora organisationer, och mindre, flexibla organisationer gynnas. Kompetenskraven kan stiga ännu mer, men det uppstår också nya tjänster med både låga och höga krav (gigjobb kontra IT-specialister). Maskiner och datorer ersätter rutinuppgifter, och efterfrågan på analytiska uppgifter ökar. IT höjer produktiviteten i t.ex. finans- och företagstjänster och driver där på uppgraderingen. Det kräver också flexibilitet och livslångt lärande.",
  alt:"Vad gör datorn bäst – rutin eller omdöme?"},
 {id:"s1-29",f:null,s:"sem1",l:2,t:"Arbetsmiljö över tid",r:"Seminarium 1 · fråga 5c–d · F4 bild 22, 25 · Syk 2022",type:"match",chk:true,
  q:"Har problemet främst minskat eller ökat de senaste 50 åren?",
@@ -1312,8 +1323,9 @@ Q.push(
  items:[{t:"Sociokulturella professioner och semiprofessioner",d:"T.ex. lärare, socialarbetare",a:0},
   {t:"Tekniska experter",d:"T.ex. IT-specialister",a:0},
   {t:"Rutinarbetare i produktionen",d:"T.ex. montörer, maskinoperatörer",a:1},
-  {t:"Hantverksyrken i industrin",d:"T.ex. maskinmekaniker",a:1}],
- why:"Kunskaps- och servicesamhället gör att de kvalificerade klasserna växer, särskilt i den mellanmänskliga logiken (välfärdstjänster). Avindustrialiseringen minskar arbetarna i den tekniska logiken. Lågkvalificerade servicejobb (butiksbiträden, hemtjänst) försvinner dock inte.",
+  {t:"Hantverksyrken i industrin",d:"T.ex. maskinmekaniker",a:1},
+  {t:"Kontorsyrken",d:"T.ex. sekreterare",a:1}],
+ why:"Kunskaps- och servicesamhället gör att de kvalificerade klasserna växer, särskilt i den mellanmänskliga logiken (välfärdstjänster). Avindustrialiseringen minskar arbetarna i den tekniska logiken, och digitaliseringen minskar kontorsyrken som sekreterare (delvis ersatta av supportjobb som callcenter). Lågkvalificerade servicejobb (butiksbiträden, hemtjänst) försvinner dock inte.",
  alt:"Industrin krymper, kunskap och service växer."},
 {id:"s1-31",f:null,s:"sem1",l:3,t:"Klassteori i jämförelse",r:"Seminarium 1 · fråga 4",type:"text",chk:true,
  q:"Jämför Goldthorpes och Wrights förklaring till varför tjänstemän och chefer får bättre villkor än arbetare. (max 60 ord)",
@@ -1321,17 +1333,235 @@ Q.push(
  alt:"En mening per teoretiker: kontrollproblem och specifik kunskap mot konflikt, lojalitet och sällsynt generell kunskap."}
 );
 
+/* ================= SEMINARIUM 1 · QUIZ =================
+   Lärarens quiz till seminarium 1 (35 frågor, två alternativ, facit från Canvas). p:"quiz" = delmomentet Quiz i sidostoppet sem1.
+   Text: Text/Seminarium/Quiz seminarie 1.md */
+Q.push(
+{id:"s1q-01",f:null,s:"sem1",p:"quiz",l:1,t:"Anledningar att arbeta",r:"Seminarium 1 · quiz fråga 1 · F1 bild 4, 8–9",type:"mc",chk:true,
+ q:"Vilka är de vanligast förekommande anledningarna till att utföra arbete?",
+ o:["Till exempel: trygghet och finansiell stabilitet, lärande och utmaningar, intressanta uppgifter, sociala relationer, att arbetet är nyttigt eller viktigt för andra eller samhället som helhet, karriärmöjligheter/högre lön, engagemang och lojalitet till en organisation eller arbetsgivare.",
+  "Till exempel: behov av fasta rutiner och tydliga regler, minskad fritid, begränsat personligt ansvar, undvikande av självständiga beslut, möjlighet att slippa planera sin vardag, anpassning till andras förväntningar och önskan om att låta arbetsgivaren styra den dagliga tillvaron."],a:0,
+ why:"Arbete ger resurser (inkomst, trygghet, karriär), det goda arbetet (lärande, utmaningar, intressanta uppgifter) och en social funktion (relationer, att göra nytta, lojalitet). Det andra alternativet beskriver sådant man vill undvika, inte skäl att arbeta.",
+ alt:"Vad skulle du själv sakna om du förlorade jobbet?"},
+{id:"s1q-02",f:null,s:"sem1",p:"quiz",l:2,t:"Motivation och klass",r:"Seminarium 1 · quiz fråga 2 · F3 bild 16–20",type:"mc",chk:true,
+ q:"Hur förväntas motivationen till att arbeta variera inom olika klasser?",
+ o:["Arbetarklass förväntas vara mer driven av ekonomiska incitament, eftersom arbetet mer präglas av repetitiva uppgifter som går snabbt att lära sig och de enkelt kan bytas ut. Tjänstemannaklass förväntas vara mer autonom i sitt arbete och därför drivas mer av karriärmöjligheter och långsiktiga belöningar.",
+  "Arbetarklassen förväntas vara mer driven av intresse för arbetsuppgifterna och möjligheten till självförverkligande, eftersom deras arbete ofta präglas av praktiska utmaningar och tydliga resultat. Tjänstemannaklassen förväntas i högre grad drivas av social gemenskap och en önskan att undvika ansvar, eftersom deras arbete ofta präglas av rutinmässiga uppgifter, begränsade möjligheter till självständiga beslut och små möjligheter att påverka arbetets innehåll."],a:0,
+ why:"Arbetarens insats kan övervakas och arbetaren är utbytbar, så lön och hot om uppsägning styr. Tjänstemannens arbete är autonomt och svårt att övervaka, så arbetsgivaren binder dem med karriär och långsiktiga belöningar.",
+ alt:"Piska och lön nu = arbetare. Morot och belöning senare = tjänstemän."},
+{id:"s1q-03",f:null,s:"sem1",p:"quiz",l:2,t:"Motivation och organisationsform",r:"Seminarium 1 · quiz fråga 3 · F2 bild 19, 26",type:"mc",chk:true,
+ q:"Hur förväntas motivationen till att arbeta variera inom olika organisationer?",
+ o:["I en tayloristisk organisation ligger fokus på utförandet av repetitiva uppgifter som ger liten plats för autonomi, eget tänkande/beslutsfattande och samarbete, därför antas inga andra anledningar att jobba än lön förekomma. Socio-teknisk organisering ger stort utrymme för autonomi, egna initiativ och problemlösning. Organisationsförbättringar, samarbete och lärande ses som viktiga drivkrafter.",
+  "I en tayloristisk organisation ligger fokus på samarbete, självständighet och gemensamt beslutsfattande, vilket antas göra att de anställda främst motiveras av anställningstrygghet och möjligheten att undvika individuellt ansvar. I en socio-teknisk organisation ligger fokus på specialisering, standardiserade arbetsuppgifter och tydliga instruktioner, vilket antas skapa motivation genom kreativitet, personligt inflytande och möjligheter till självförverkligande. Därför förväntas de anställda främst drivas av individuella prestationer och konkurrens snarare än lön och ekonomisk trygghet."],a:0,
+ why:"Taylorismen: små repetitiva moment, förmän och ackord – bara lönen motiverar (X-teori). Socio-teknisk organisation: autonomi, egna initiativ och lärande (Y-teori). Det andra alternativet har bytt plats på de två organisationsformerna.",
+ alt:"Löpande band = lön. Självstyrande team = lärande och initiativ."},
+{id:"s1q-04",f:null,s:"sem1",p:"quiz",l:2,t:"Behov, rationell och rättvisa",r:"Seminarium 1 · quiz fråga 4 · F1 bild 10–11",type:"mc",chk:true,
+ q:"Vad är skillnaden på behovsteori, rationell teori och rättviseteori vad gäller synen på mänsklig arbetsmotivation?",
+ o:["Behovsteori: det finns grundläggande behov som alla människor strävar efter.\nRationell teori: utgår från de mål som individen personligen vill få ut av sitt arbete, och vad man vill uppnå styrs också av vad man bedömer som möjligt att uppnå.\nRättviseteori: människor vill uppnå det som de jämför sig med uppnår, och ändrar sina mål efter vad de upplever sig förtjänta av i förhållande till andra med liknande position.",
+  "Behovsteori: motivationen bestäms främst av vilka belöningar man ser andra få, och de grundläggande behoven varierar med positionen i organisationen.\nRationell teori: alla har samma grundläggande mål med arbetet, men skiljer sig i hur mycket ansträngning de är beredda att lägga ner.\nRättviseteori: människor motiveras av personliga mål oberoende av hur andra har det och anpassar förväntningarna efter vad de själva bedömer som möjligt."],a:0,
+ why:"Behov (Herzberg) = givna och lika för alla. Rationell (Locke, Vroom) = egna preferenser, justerade efter vad som är möjligt. Rättvisa (Adams) = jämförelsen med andra. Det andra alternativet blandar ihop teorierna: jämförelsen hör till rättviseteorin, och ”det möjliga” till den rationella.",
+ alt:"Behov = trappa. Rationell = kalkyl. Rättvisa = jämförelse."},
+{id:"s1q-05",f:null,s:"sem1",p:"quiz",l:1,t:"Organisationslojalitet",r:"Seminarium 1 · quiz fråga 5 · F1 bild 12",type:"mc",chk:true,
+ q:"Vad är skillnaderna mellan affektiv, normativ och instrumentell organisationslojalitet?",
+ o:["Affektiv: en vilja att stanna i och anstränga sig för organisationen för att man tycker om den och/eller vad den åstadkommer.\nNormativ: handlar om plikt och att man upplever sig vara skyldig organisationen något.\nInstrumentell: organisationen ger trygghet och det finns karriärbanor med tydliga belöningar kopplade till att man stannar.",
+  "Affektiv: att vilja stanna eftersom organisationen erbjuder trygghet, goda anställningsvillkor och karriärutveckling.\nNormativ: att stanna för att undvika förändringar och slippa anpassa sig till nya uppgifter, kollegor och miljöer.\nInstrumentell: en moralisk skyldighet att stanna och bidra, även när det inte ger några personliga fördelar."],a:0,
+ why:"Affektiv = känsla för organisationen. Normativ = plikt och skuld. Instrumentell = det lönar sig (trygghet, karriär, belöningar). Det andra alternativet har gett den affektiva lojaliteten den instrumentellas innehåll och den instrumentella den normativas.",
+ alt:"Affekt = känsla. Norm = plikt. Instrument = verktyg för egen vinning."},
+{id:"s1q-06",f:null,s:"sem1",p:"quiz",l:3,t:"Lojalitet och styrning",r:"Seminarium 1 · quiz fråga 6 · F2 bild 10–11 · F3 bild 19–20",type:"mc",chk:true,
+ q:"Hur skulle rimligtvis affektiv, normativ och instrumentell organisationslojalitet kunna kopplas till olika former av styrning?",
+ o:["Instrumentell lojalitet kan kopplas till styrning genom ”psykologiska kontrakt”: arbetsgivaren signalerar att den som stannar och anstränger sig för organisationens mål kan räkna med befordran, bonus, löneförhöjning, trygg anställning eller andra fördelar.\nNormativ styrning handlar om att de anställda ska anamma organisationens mål som sina egna, oberoende av materiella fördelar. Den appellerar till känslor och värderingar och kan därför kopplas till affektiv och normativ lojalitet.",
+  "Instrumentell lojalitet kan främst kopplas till normativ styrning, där arbetsgivaren skapar en disciplinär lojalitetskultur genom att minska de anställdas självständighet och möjligheter att påverka arbetet.\nAffektiv och normativ lojalitet kan i stället kopplas till mål- och regelstyrning, där tydliga instruktioner, prestationskrav och kontroll skapar engagemang, samhörighet och en moralisk skyldighet att stanna."],a:0,
+ why:"Löften om framtida belöningar (psykologiska kontrakt) ger instrumentell lojalitet. Normativ styrning vill att de anställda ska vilja samma sak som organisationen och verkar genom känslor och värderingar – alltså affektiv och normativ lojalitet.",
+ alt:"Belöning → instrumentell. Värderingar och känslor → affektiv och normativ."},
+{id:"s1q-07",f:null,s:"sem1",p:"quiz",l:2,t:"SDT:s dimensioner",r:"Seminarium 1 · quiz fråga 7 · Gagné & Deci 2005 · F2 bild 17–18",type:"mc",chk:true,
+ q:"Vilka är de centrala dimensionerna i Gagné och Decis typologi?",
+ o:["Dels indelningen i amotivation (avsaknad av motivation), extrinsikal motivation (kopplad till mål som aktiviteten leder till) och intrinsikal motivation (aktiviteten är intressant/lustfylld i sig).\nDels graden av autonomi: aktiviteten är autonom om den är intrinsikalt motiverad eller om syftet upplevs som viktigt för personen, och kontrollerad om den bara görs för ett externt incitament som är frikopplat från syftet, t.ex. hot om uppsägning eller löneavdrag.",
+  "Dels indelningen i amotivation (stark motivation men otydliga mål), extrinsikal motivation (bygger på individens personlighet) och intrinsikal motivation (vill undvika negativa konsekvenser).\nDels graden av ansträngning: aktiviteten är autonom om man arbetar självständigt utan samarbete, och kontrollerad om man arbetar med andra och anpassar sig efter gemensamma mål."],a:0,
+ why:"Gagné & Deci: tre motivationstyper (amotivation, extrinsikal, intrinsikal) och graden av autonomi, från kontrollerad till autonom. Det andra alternativet har fel definitioner och byter autonomi mot ”ansträngning” och ensamarbete.",
+ alt:"Sista raden i tabellen i F2 bild 18: ”Grad av autonomi”."},
+{id:"s1q-08",f:null,s:"sem1",p:"quiz",l:3,t:"Lojalitet i SDT",r:"Seminarium 1 · quiz fråga 8 · F1 bild 12 · F2 bild 18",type:"mc",chk:true,
+ q:"Hur skulle ni (på ett ungefär) placera in affektiv, normativ och instrumentell organisationslojalitet inom Gagné och Decis typologi?",
+ o:["Affektiv mer åt det autonoma spektrat av extrinsikal motivation (identifierad), instrumentell mer åt det kontrollerade spektrat av extrinsikal motivation (extern), normativ mer i mitten (introjicerad).",
+  "Affektiv mer åt det kontrollerade spektrat av intrinsikal motivation, instrumentell mer åt det amotiverade spektrat av extrinsikal motivation (identifierad), normativ närmare intrinsikal motivation eftersom den bygger på personliga värderingar."],a:0,
+ why:"Belöningar (instrumentell) = extern reglering. Skuld och plikt (normativ) = introjicerad, i mitten. Delade värderingar (affektiv) = identifierad, den autonoma delen av den yttre motivationen. Alla tre är extrinsikala – lojalitet handlar inte om att uppgiften är rolig i sig.",
+ alt:"Belöning → extern. Skuld → introjicerad. Delade värderingar → identifierad."},
+{id:"s1q-09",f:null,s:"sem1",p:"quiz",l:2,t:"Horisontell och vertikal arbetsdelning",r:"Seminarium 1 · quiz fråga 9 · F2 bild 6",type:"mc",chk:true,
+ q:"Vad är skillnaden på arbetsdelning i horisontell respektive vertikal bemärkelse?",
+ o:["Horisontell: om individer utför få eller många ”typer” av arbetsuppgifter.\nVertikal: om individer själva får planera och bestämma hur uppgifterna utförs.\nHög horisontell + hög vertikal: få uppgifter på order ovanifrån.\nLåg horisontell + hög vertikal: många uppgifter på order ovanifrån.\nHög horisontell + låg vertikal: avgränsade uppgifter men stort inflytande över hur de utförs.\nLåg horisontell + låg vertikal: växlar mellan uppgifter på eget initiativ och samordnar med andra.",
+  "Horisontell: hur uppgifter fördelas mellan avdelningar och yrkesgrupper.\nVertikal: hur många nivåer av ansvar och kompetens som finns i varje yrkesgrupp.\nHög horisontell + hög vertikal: samarbete mellan många avdelningar och stort inflytande över övergripande beslut.\nLåg horisontell + hög vertikal: likartade uppgifter men växling mellan chefs- och beslutsnivåer.\nHög horisontell + låg vertikal: växling mellan avdelningar men små möjligheter till specialistkompetens.\nLåg horisontell + låg vertikal: tydligt avgränsade yrkesgrupper där ansvar fördelas efter prestation."],a:0,
+ why:"Horisontellt = hur många slags uppgifter man har. Vertikalt = vem som planerar och bestämmer hur de görs. Hög arbetsdelning betyder alltid mindre för den enskilde: färre uppgifter eller mindre beslutsutrymme.",
+ alt:"Horisontellt = bredvid varandra. Vertikalt = över och under varandra."},
+{id:"s1q-10",f:null,s:"sem1",p:"quiz",l:1,t:"Skäl till horisontell arbetsdelning",r:"Seminarium 1 · quiz fråga 10 · F2 bild 8, 19",type:"mc",chk:true,
+ q:"Vad finns det för skäl till att arbetsorganisationer vill ha en hög arbetsdelning i horisontell bemärkelse?",
+ o:["En individ som enbart utför en uppgift kan lära sig att utföra den väldigt väl, vilket ökar effektiviteten.",
+  "En individ som utför många olika uppgifter samtidigt får större variation i arbetet, vilket minskar behovet av specialisering och ökar effektiviteten."],a:0,
+ why:"Hög horisontell arbetsdelning = specialisering. Få uppgifter gör att man blir snabb och skicklig på dem. Många olika uppgifter är tvärtom låg horisontell arbetsdelning.",
+ alt:"Hög arbetsdelning = färre uppgifter per person."},
+{id:"s1q-11",f:null,s:"sem1",p:"quiz",l:1,t:"Skäl till vertikal arbetsdelning",r:"Seminarium 1 · quiz fråga 11 · F2 bild 8, 19 · F3 bild 17",type:"mc",chk:true,
+ q:"Vad finns det för skäl till att arbetsorganisationer vill ha en hög arbetsdelning i vertikal bemärkelse?",
+ o:["Det minskar utrymmet för mänskliga misstag och för försök att komma undan uppgifter. Arbetsledaren ser produktionen som en helhet och kan därmed fatta rationella beslut för att öka effektiviteten.",
+  "Det ökar de anställdas möjligheter att själva bestämma över arbetets innehåll och utförande. Genom att minska arbetsledningens inflytande kan varje individ fatta beslut utifrån sina intressen, vilket antas öka effektiviteten."],a:0,
+ why:"Hög vertikal arbetsdelning flyttar besluten uppåt till ledningen. Tanken (Taylor) är att färre egna beslut ger färre misstag och mindre smitning, och att den som ser helheten fattar bättre beslut. Mer eget beslutsutrymme är tvärtom låg vertikal arbetsdelning.",
+ alt:"Vertikalt = makten över arbetet ligger högre upp."},
+{id:"s1q-12",f:null,s:"sem1",p:"quiz",l:1,t:"Arbetsdelning och autonomi",r:"Seminarium 1 · quiz fråga 12 · F2 bild 6, 26",type:"mc",chk:true,
+ q:"Hur kan arbetsdelningen i horisontell och vertikal bemärkelse kopplas till arbetstagarens egenkontroll/autonomi?",
+ o:["Främst mindre arbetsdelning i vertikal bemärkelse bidrar till individens autonomi.",
+  "Främst högre arbetsdelning i horisontell bemärkelse bidrar till individens autonomi."],a:0,
+ why:"Autonomi = att själv bestämma hur arbetet görs, och det är den vertikala dimensionen. Mindre vertikal arbetsdelning (arbetsberikning) ger mer egenkontroll.",
+ alt:"Vem bestämmer – jag eller chefen?"},
+{id:"s1q-13",f:null,s:"sem1",p:"quiz",l:2,t:"Arbetsdelning och lärande",r:"Seminarium 1 · quiz fråga 13 · F2 bild 6, 26 · F1 bild 20",type:"mc",chk:true,
+ q:"Hur kan arbetsdelningen i horisontell och vertikal bemärkelse kopplas till arbetstagarens lärande?",
+ o:["Mindre arbetsdelning i både horisontell och vertikal bemärkelse kan bidra till ökat lärande genom större variation och frihet i utförandet av arbetsuppgifter. (Ett motargument är att för mycket variation kan göra att man aldrig lär sig något tillräckligt väl – man blir en ”hoppjerka”.)",
+  "Högre arbetsdelning i både horisontell och vertikal bemärkelse bidrar alltid till ökat lärande."],a:0,
+ why:"Variation (låg horisontell) och frihet att själv lösa uppgifterna (låg vertikal) ger lärande. Facit nämner också motargumentet: för mycket variation och man blir en hoppjerka som aldrig lär sig något ordentligt. Lägg märke till ”alltid” i det andra alternativet.",
+ alt:"Löpande band: en uppgift och förmannen bestämmer – vad lär du dig?"},
+{id:"s1q-14",f:null,s:"sem1",p:"quiz",l:2,t:"Organisationsformer och arbetsdelning",r:"Seminarium 1 · quiz fråga 14 · F2 bild 19–22, 26",type:"mc",chk:true,
+ q:"I vilken grad präglas tayloristisk, socio-teknisk och byråkratisk organisation av hög arbetsdelning i vertikal och horisontell bemärkelse?",
+ o:["Tayloristisk: hög arbetsdelning i både horisontell och vertikal bemärkelse.\nSocio-teknisk: låg arbetsdelning i både horisontell och vertikal bemärkelse.\nByråkratisk: oklar horisontellt (specialisering, avgränsade ansvarsområden snarare än uppgifter) och oklar vertikalt (eget ansvar och regelstyrning i stället för direkta order, men tydliga hierarkier).",
+  "Tayloristisk: låg i båda, eftersom de anställda växlar mellan uppgifter och själva bestämmer hur arbetet ska utföras.\nSocio-teknisk: hög i båda, eftersom samarbete och lärande kräver avgränsade uppgifter och detaljerade instruktioner.\nByråkratisk: låg horisontellt och hög vertikalt, eftersom alla utför samma uppgifter och ledningen fattar alla beslut."],a:0,
+ why:"Taylorism: små moment och förmän – högt på båda. Socio-teknisk: arbetsutvidgning och arbetsberikning – lågt på båda. Byråkratin passar inte in: ansvarsområden i stället för små uppgifter, och regler i stället för order, men tydliga hierarkier.",
+ alt:"Byråkratin är facits ”oklar” på båda dimensionerna."},
+{id:"s1q-15",f:null,s:"sem1",p:"quiz",l:1,t:"Autonomi och motivation (SDT)",r:"Seminarium 1 · quiz fråga 15 · F2 bild 15–16",type:"mc",chk:true,
+ q:"Hur kan arbetstagarens egenkontroll och autonomi relateras till arbetstagarens motivation att arbeta utifrån självbestämmandeteori?",
+ o:["Självbestämmandeteorin är en behovsteori. Autonomi är ett centralt behov som människor vill uppfylla, och när behovet uppfylls blir motivationen högre.",
+  "Självbestämmandeteorin är en rationell teori. Autonomi innebär att människor själva måste ta ansvar för sina prestationer, vilket ökar kraven på individen."],a:0,
+ why:"SDT ser kompetens, autonomi och samhörighet som grundbehov – därför är det en behovsteori. Uppfylld autonomi ger mer (och mer autonom) motivation.",
+ alt:"SDT har tre grundbehov. Vilken sorts teori är det då?"},
+{id:"s1q-16",f:null,s:"sem1",p:"quiz",l:1,t:"Autonomi och hälsa (Karasek)",r:"Seminarium 1 · quiz fråga 16 · F1 bild 20–21",type:"mc",chk:true,
+ q:"Hur kan arbetstagarens egenkontroll och autonomi relateras till hälsa/ohälsa utifrån krav–kontroll-modellen?",
+ o:["Autonomi i till exempel hur och när arbetet ska utföras reducerar stressen för den som har kravfyllda uppgifter.",
+  "Autonomi i till exempel hur och när arbetet ska utföras ökar stressen, eftersom den som har kravfyllda uppgifter dessutom måste ta ansvar för egna beslut."],a:0,
+ why:"Karasek: höga krav plus låg kontroll = högstressjobb. Höga krav plus hög kontroll = aktivt jobb. Kontrollen buffrar alltså mot kraven.",
+ alt:"Höga krav är inte farliga om du själv får bestämma hur du löser dem."},
+{id:"s1q-17",f:null,s:"sem1",p:"quiz",l:2,t:"Goldthorpe, Wright och Oesch",r:"Seminarium 1 · quiz fråga 17 · F3 bild 25–30 · F4 bild 30–33",type:"mc",chk:true,
+ q:"Vilka är de mest centrala likheterna mellan Goldthorpes, Wrights och Oeschs klasscheman?",
+ o:["Alla placerar chefer och tjänstemän (professionals) högst upp och arbetare och vissa lågkvalificerade servicejobb längst ner. I mitten finns t.ex. tekniker, arbetsledare och många service- och administrativa jobb.",
+  "Alla utgår från att klass främst bestäms av hur länge man har arbetat och hur stor erfarenhet man har i yrket. Högst upp hamnar de med lång anställningstid, i mitten de som ofta byter jobb, och längst ner nyanställda och deltidsarbetande."],a:0,
+ why:"Trots olika förklaringar (kontrakt, exploatering, arbetslogik) ger de tre schemana samma grova hierarki: chefer och professionella överst, arbetare och enkla servicejobb underst. Anställningstid är ingen dimension i något av dem.",
+ alt:"Hur ser stegen ut uppifrån och ner, oavsett teoretiker?"},
+{id:"s1q-18",f:null,s:"sem1",p:"quiz",l:2,t:"Goldthorpes dimensioner",r:"Seminarium 1 · quiz fråga 18 · F3 bild 25–27 · Rose & Harrison",type:"mc",chk:true,
+ q:"Definiera den centrala dimensionen/dimensionerna som särskiljer klasser enligt Goldthorpes teori.",
+ o:["Arbetsgivare och anställd är en dimension. En annan är skillnaden mellan arbetskontrakt (lön för direkt insats) och tjänstemannakontrakt (fastställd lön som ökar successivt med tiden i organisationen). Det finns även blandkontrakt.",
+  "En dimension är skillnaden mellan produktivt och administrativt arbete, efter hur direkt uppgifterna bidrar till produktionen. En annan är yrkesmässig rörlighet, där de som ofta byter arbete hamnar i andra klasser än de med stabila anställningar. Det finns även övergångsklasser."],a:0,
+ why:"Goldthorpe = anställningskontraktet. Arbetskontrakt: betalt för insatsen nu. Tjänsterelation: lön och karriär som växer med tiden. Däremellan blandformer.",
+ alt:"Goldthorpe frågar: vilket slags kontrakt har du?"},
+{id:"s1q-19",f:null,s:"sem1",p:"quiz",l:2,t:"Orsak till klass hos Goldthorpe",r:"Seminarium 1 · quiz fråga 19 · F3 bild 25–26",type:"mc",chk:true,
+ q:"Vad är den bakomliggande, strukturella orsaken till uppkomsten av olika klasser enligt Goldthorpe?",
+ o:["Moderna organisationer är stora och komplexa, så arbetsgivare måste delegera en del av sin makt till chefer och tjänstemän som i praktiken styr produktionen och organisationen. De får därmed en mer privilegierad roll än arbetare och andra som utför uppgifter där de är utbytbara.",
+  "Moderna organisationer är flexibla och måste dela in de anställda efter personliga egenskaper (t.ex. personlighetstyper). Klasser uppstår när individer med liknande värderingar och arbetssätt söker sig till samma slags arbeten."],a:0,
+ why:"Goldthorpe: komplexa organisationer kan inte styras direkt av ägaren. Makt och kunskap delegeras, och de som får dem kan inte bytas ut lika lätt – därför får de bättre villkor.",
+ alt:"Varför kan inte ägaren av ett storföretag kontrollera allt själv?"},
+{id:"s1q-20",f:null,s:"sem1",p:"quiz",l:3,t:"Drivkrafter hos Goldthorpe",r:"Seminarium 1 · quiz fråga 20 · F3 bild 19–20, 26",type:"mc",chk:true,
+ q:"Vilka är de primära drivkrafterna att arbeta enligt Goldthorpe, och hur skiljer de sig mellan arbetare och chefer/tjänstemän?",
+ o:["Arbetare arbetar mot direkt betalning, bitvis för sin insats, eller för att undvika bestraffning och uppsägning.\nChefer och tjänstemän har arbete där insatsen inte kan övervakas direkt. Lönen är ändå den primära drivkraften, men den är fördröjd för att få dem att stanna och högre än arbetarnas för att kompensera för att disciplinåtgärder saknas (morot i stället för piska). Det liknar instrumentell organisationslojalitet.",
+  "Arbetare arbetar främst för att utveckla sina färdigheter och känna yrkesstolthet, och kan själva bedöma sina prestationer, så lön och kontroll är mindre viktiga.\nChefer och tjänstemän har arbete som är lätt att mäta och övervaka, så de motiveras av direkta belöningar och disciplinåtgärder – en ”disciplinär prestationslojalitet”."],a:0,
+ why:"Kontrollproblemet avgör: arbetarens insats syns, så piska och betalt per insats fungerar. Tjänstemannens insats syns inte, så arbetsgivaren använder fördröjda och högre löner – instrumentell lojalitet.",
+ alt:"Kan chefen se exakt vad du gör idag? Då piska. Annars morot."},
+{id:"s1q-21",f:null,s:"sem1",p:"quiz",l:3,t:"Hinder hos Goldthorpe",r:"Seminarium 1 · quiz fråga 21 · F3 bild 26, 30",type:"mc",chk:true,
+ q:"Vilka är de främsta hindren som gör att människor inte kan röra sig fritt mellan olika klasser enligt Goldthorpe?",
+ o:["Chefer och tjänstemän har specifika kunskaper som bara gäller i den egna organisationen – ett starkt instrumentellt skäl att stanna. Arbetsgivaren är beroende av den kunskapen och vill behålla dem, så de är inte utbytbara mot en arbetare eller en extern rekrytering. Arbetsgivarens främsta instrument är dessutom fördröjda incitament som befordringar, och de är bara trovärdiga om tjänstemännen behåller sina positioner.",
+  "Chefer och tjänstemän har generella kunskaper som fungerar överallt, så de kan lätt byta arbetsgivare och är svåra att behålla med ekonomiska incitament. Arbetare har starkare band till sin arbetsplats eftersom deras kunskaper är knutna till lokala förhållanden, och klassgränserna upprätthålls av att arbetare utvecklar affektiv lojalitet."],a:0,
+ why:"Goldthorpe: kunskapen är organisationsspecifik. Den gör tjänstemannen värdefull just här, och karriärstegen bygger på att man stannar. Generell kunskap är Wrights bild av experterna.",
+ alt:"Goldthorpe = specifik kunskap. Wright = generell."},
+{id:"s1q-22",f:null,s:"sem1",p:"quiz",l:1,t:"Wrights dimensioner",r:"Seminarium 1 · quiz fråga 22 · F3 bild 25, 29",type:"mc",chk:true,
+ q:"Vilka är de centrala dimensionerna som särskiljer klasser enligt Wrights teori?",
+ o:["Dels den mellan anställd och arbetsgivare. De andra två är auktoritet (hur många underställda man har) och om man har expertkunskaper.",
+  "Dels den mellan fast och tillfälligt anställda. De andra två är arbetslivserfarenhet (hur länge man har arbetat i samma yrke) och om man kan byta arbetsgivare."],a:0,
+ why:"Wright: ägande, sedan bland de anställda auktoritet och expertis (F3 bild 29).",
+ alt:"Ägare – chef – expert."},
+{id:"s1q-23",f:null,s:"sem1",p:"quiz",l:2,t:"Orsak till klass hos Wright",r:"Seminarium 1 · quiz fråga 23 · F3 bild 22–23, 28",type:"mc",chk:true,
+ q:"Vad är den bakomliggande, strukturella orsaken till uppkomsten av olika klasser enligt Wright?",
+ o:["Grunden är exploatering. Arbetsgivaren vill få ut så mycket vinst som möjligt, arbetaren vill ha så hög lön som möjligt. Hotet om uppsägning är så allvarligt att arbetare accepterar en lön under värdet av sin insats, och mervärdet tillfaller arbetsgivaren.",
+  "Grunden är specialisering. Organisationer behöver olika kunskaper och delar in arbetstagare efter personliga egenskaper och förmåga att samarbeta. Klasskillnader uppstår genom yrkesval och preferenser snarare än genom ekonomiska intressekonflikter."],a:0,
+ why:"Wright bygger på Marx: klass uppstår ur konflikten om värdet som arbetet skapar. Arbetaren får mindre än insatsen är värd, och skillnaden går till ägaren.",
+ alt:"Wright = Marx-spåret: konflikt och mervärde."},
+{id:"s1q-24",f:null,s:"sem1",p:"quiz",l:3,t:"Drivkrafter hos Wright",r:"Seminarium 1 · quiz fråga 24 · F3 bild 23, 28 · Wright 1997",type:"mc",chk:true,
+ q:"Vilka är de primära drivkrafterna att arbeta enligt Wright, och hur skiljer de sig mellan arbetare och chefer/tjänstemän?",
+ o:["Arbetare arbetar för att de är beroende av lönen och för att undvika disciplinåtgärder och uppsägning. Experter har en privilegierad position eftersom deras kompetens är sällsynt och arbetet svårt att övervaka.\nChefer står egentligen på samma sida som andra anställda i konflikten om resurser. Arbetsgivaren måste därför få dem på sin sida med materiella fördelar (högre lön, karriär, bättre villkor) men också med värderingar och lojalitet mellan arbetsgivare och chefer.",
+  "Arbetare arbetar för att utveckla yrkeskunskaper och känna gemenskap, och kan utveckla stark lojalitet. Experter har en mindre privilegierad position eftersom specialiserad kunskap gör det svårt att byta jobb.\nChefer omfattas inte av några intressekonflikter med arbetsgivaren. Arbetsgivaren vill därför begränsa deras materiella belöningar och få dem att konkurrera med varandra."],a:0,
+ why:"Wright: arbetare tvingas av lönen och hotet om uppsägning. Experter tjänar på sällsynt kompetens. Chefer är egentligen anställda, så arbetsgivaren köper deras lojalitet (lojalitetsränta) och påverkar deras värderingar.",
+ alt:"Chefen är också anställd – varför ska hen ta ägarens parti?"},
+{id:"s1q-25",f:null,s:"sem1",p:"quiz",l:3,t:"Hinder hos Wright",r:"Seminarium 1 · quiz fråga 25 · F3 bild 28 · Wright 1997",type:"mc",chk:true,
+ q:"Vilka är de främsta hindren som gör att människor inte kan röra sig fritt mellan olika klasser enligt Wright?",
+ o:["Dels de värderingar som krävs för att vara chef, alltså att stå på arbetsgivarens sida i konflikten om värdet av produktionen. Dels att experter kan hålla sina kunskaper sällsynta, t.ex. genom att begränsa tillträdet till utbildningar och kräva certifikat för att få utöva yrket.",
+  "Dels de personliga egenskaper som krävs för att vara chef, framför allt självständighet och en vilja att undvika konflikter. Experter kan också sprida sina kunskaper till andra yrkesgrupper, vilket minskar klasskillnaderna, och gränserna hålls främst uppe av att lika personligheter väljer samma arbeten."],a:0,
+ why:"Chefer måste vara lojala mot ägarintresset, och experter stänger inflödet med certifikat (kompetensränta). Båda är mekanismer i konflikten om resurser – inte personlighet.",
+ alt:"Certifikat och lojalitet stänger dörren."},
+{id:"s1q-26",f:null,s:"sem1",p:"quiz",l:2,t:"Klass, autonomi och lärande",r:"Seminarium 1 · quiz fråga 26 · F3 bild 13–14, 26",type:"mc",chk:true,
+ q:"Hur förväntas klass påverka arbetstagares autonomi och lärande i arbetet?",
+ o:["Klass påverkar graden av autonomi. Arbetarklassens kontrollerade arbetsmiljö ger litet utrymme för egna initiativ, och eftersom de ska vara så utbytbara som möjligt är lärandet begränsat. Högre positioner har arbete som inte går att styra med direkt kontroll och har därför mer autonomi.\nI Goldthorpes teori utvecklar chefer och tjänstemän organisationsspecifika kunskaper genom sitt arbete.",
+  "Klass påverkar vilka kunskaper man utvecklar men inte autonomin. Arbetare har mer självständighet eftersom praktiska uppgifter är svåra att kontrollera, medan chefer och tjänstemän styrs hårdare av mål och effektivitetskrav.\nI Goldthorpes teori utvecklar arbetare organisationsspecifika kunskaper, medan chefer och tjänstemän har generella kunskaper."],a:0,
+ why:"Ju högre klass, desto mer autonomi och lärande, eftersom arbetet inte kan styras med direkt kontroll. Hos Goldthorpe är det tjänstemännen – inte arbetarna – som bygger upp organisationsspecifik kunskap.",
+ alt:"Utbytbar = lite att lära. Svår att övervaka = mer frihet."},
+{id:"s1q-27",f:null,s:"sem1",p:"quiz",l:2,t:"Klass och livssituation",r:"Seminarium 1 · quiz fråga 27 · F1 bild 14 · F3 bild 13–14",type:"mc",chk:true,
+ q:"Hur förväntas klass påverka livssituationen i övrigt?",
+ o:["Arbetarklassen är ”utbytbar”, så anställningen ger ingen långsiktig ekonomisk trygghet.\nHälsan påverkas också negativt av dålig fysisk arbetsmiljö och låg grad av autonomi.",
+  "Arbetarklassen har en mer stabil livssituation eftersom uppgifterna är avgränsade och inte kräver lång utbildning, vilket gör det lätt att byta jobb och få ekonomisk trygghet.\nHälsan påverkas främst av karriärmöjligheter, så chefer och tjänstemän förväntas ha sämre hälsa av kognitiv dissonans i psykologiska kontrakt."],a:0,
+ why:"Utbytbarhet ger otrygghet, och tung fysisk miljö plus låg kontroll ger sämre hälsa (jfr Karasek). Klass syns alltså även utanför jobbet.",
+ alt:"Lätt att ersätta = lätt att bli av med."},
+{id:"s1q-28",f:null,s:"sem1",p:"quiz",l:2,t:"Oeschs horisontella dimension",r:"Seminarium 1 · quiz fråga 28 · F4 bild 30–31 · Oesch 2006",type:"mc",chk:true,
+ q:"Vad är syftet med att införa en horisontell dimension i Oeschs klasschema?",
+ o:["Att förstå politiska och värderingsmässiga skillnader inom den växande tjänstemannaklassen.\nAtt förstå skillnader i arbetsvillkor beroende på vilken kontrollstruktur och vilka incitament man möter.\nAtt förstå varför horisontella skillnader försvårar mobilitet och omställning, t.ex. varför tillväxten i människoinriktad service inte friktionsfritt kan kompensera för nedgången i tillverkningsindustrin.",
+  "Att förstå hur skillnader i anställningstid och arbetslivserfarenhet gör att människor rör sig mellan klasser utan att byta yrke eller arbetsgivare. Den horisontella dimensionen beskriver karriärsteg, t.ex. varför en industriarbetare i slutet av karriären kan tillhöra en högre klass än en nyanställd chef."],a:0,
+ why:"Arbetslogiken (teknisk, organisatorisk, mellanmänsklig) förklarar värderingar och politik, arbetsvillkor och hinder för omställning – en friställd industriarbetare blir inte automatiskt undersköterska.",
+ alt:"Det ”nya medelklassproblemet” i F4."},
+{id:"s1q-29",f:null,s:"sem1",p:"quiz",l:3,t:"Drivkrafter hos Oesch",r:"Seminarium 1 · quiz fråga 29 · F4 bild 32 · Oesch 2006 tabell 1",type:"mc",chk:true,
+ q:"Vilka är de primära drivkrafterna att arbeta enligt Oesch, och hur skiljer de sig mellan arbetare och chefer/tjänstemän samt mellan de tre arbetslogikerna?",
+ o:["Arbetare arbetar mer på grund av externa kontrollfunktioner, medan andra drivkrafter betonas för chefer och tjänstemän.\nHögre tekniker: orienterade mot kunskapsgruppen.\nHögre chefer och administratörer: orienterade mot organisationen och dess hierarki.\nHögre sociokulturella: orienterade mot klienten eller klientgruppen.\nLägre tekniska yrken: kontrolleras av produktionsprocessen, alltså maskinen (jfr fordism).\nLägre serviceyrken: kontrolleras av kunden eller klientens behov.",
+  "Arbetare arbetar utifrån egna intressen och kompetensutveckling, medan chefer och tjänstemän motiveras av externa kontrollfunktioner.\nHögre tekniker: administrativ orientering mot regler och hierarkier.\nHögre chefer och administratörer: kunskapsorienterade.\nHögre sociokulturella: produktionsorienterade mot effektivitet och resultat.\nLägre tekniska yrken: kontrolleras av kundernas önskemål.\nLägre serviceyrken: kontrolleras av maskiner och standardiserade processer."],a:0,
+ why:"Vertikalt: arbetare styrs utifrån. Horisontellt: tekniska → kunskap/maskin, organisatoriska → organisation/hierarki, mellanmänskliga → klient/kund. Det andra alternativet har kastat om orienteringarna.",
+ alt:"Ingenjören, chefen och läraren – vem är de lojala mot?"},
+{id:"s1q-30",f:null,s:"sem1",p:"quiz",l:2,t:"Hinder hos Oesch",r:"Seminarium 1 · quiz fråga 30 · Oesch 2006",type:"mc",chk:true,
+ q:"Vilka är de främsta hindren som gör att människor inte kan röra sig fritt mellan olika klasser enligt Oesch?",
+ o:["Orienteringar och värderingar, kunskaper och förmågor som krävs för att utöva yrken inom en viss klass förhindrar förflyttningar.",
+  "Skillnader i anställningstid, geografisk placering och arbetsgivarens storlek förhindrar förflyttningar, eftersom individer främst är bundna till sin nuvarande arbetsplats."],a:0,
+ why:"Varje klass kräver sitt kunnande och sin orientering, både uppåt (kvalifikationer) och i sidled (arbetslogik).",
+ alt:"Kan en maskinoperatör bli sjuksköterska i morgon? Vad saknas?"},
+{id:"s1q-31",f:null,s:"sem1",p:"quiz",l:1,t:"Strukturförändringar",r:"Seminarium 1 · quiz fråga 31 · F4 bild 2–4 · Westerman & Syk",type:"mc",chk:true,
+ q:"Vilka är de primära strukturförändringarna som tydligt präglat arbetsmarknaden i Sverige och liknande länder de senaste 50 åren?",
+ o:["Ökade kvalifikationer (kunskapssamhällets framväxt) och serviceexpansionen (industrisamhällets nedgång).",
+  "Minskad specialisering (yrkessamhällets nedgång) och ökad självförsörjning (övergång från lönearbete till produktion för eget bruk), t.ex. Gröna vågen på 1970-talet."],a:0,
+ why:"Westerman & Syk: kvalifikationsuppgradering och serviceexpansion har gått parallellt sedan 1970-talet.",
+ alt:"F4: kunskapssamhället och tjänstesamhället."},
+{id:"s1q-32",f:null,s:"sem1",p:"quiz",l:2,t:"IT-revolutionen",r:"Seminarium 1 · quiz fråga 32 · F4 bild 10, 16, 20 · Westerman & Syk",type:"mc",chk:true,
+ q:"På vilket sätt påverkar IT-revolutionen kunskapssamhällets framväxt och serviceexpansionen?",
+ o:["Tendenserna består, men med IT-paradigmet minskar fördelen med standardisering och stora organisationer, och fördelen med nyskapande, mindre och flexibla organisationer ökar. Tekniken kan ge ännu högre kompetenskrav, men också nya slags servicetjänster med både låga och höga krav (t.ex. enkla gigjobb kontra IT-specialister).",
+  "Tendenserna upphör, eftersom digital teknik minskar behovet av både specialkunskaper och tjänstearbete. Det sker en återgång till stora hierarkiska organisationer med likartade uppgifter under direkt övervakning, och yrkeskunskaper blir mindre viktiga."],a:0,
+ why:"IT förstärker trenderna: små flexibla organisationer gynnas och kompetenskraven stiger, men samtidigt uppstår både enkla och avancerade servicejobb.",
+ alt:"Gigförare och IT-specialist – båda är jobb som IT har skapat."},
+{id:"s1q-33",f:null,s:"sem1",p:"quiz",l:1,t:"Arbetsmiljö som minskat",r:"Seminarium 1 · quiz fråga 33 · F4 bild 22, 25 · Syk 2022",type:"mc",chk:true,
+ q:"Vilka arbetsmiljörelaterade problem har främst minskat som en följd av strukturomvandlingarna de senaste 50 åren?",
+ o:["Fler kunskapsjobb och färre tunga industrijobb gör att fler har fysiskt mindre betungande kontorsjobb. Den generella tendensen är också att övervakning och detaljstyrning minskar (med undantag).",
+  "Fler kunskapsjobb och färre industrijobb har främst minskat sociala konflikter och samarbetssvårigheter, eftersom arbete med information och digital teknik minskar behovet av personlig kommunikation."],a:0,
+ why:"Syk: fysiskt lättare arbete och mindre detaljstyrning följer med kunskapssamhället.",
+ alt:"Fysiskt bättre, mindre stämpelklocka."},
+{id:"s1q-34",f:null,s:"sem1",p:"quiz",l:1,t:"Arbetsmiljö som ökat",r:"Seminarium 1 · quiz fråga 34 · F4 bild 22, 25 · Syk 2022",type:"mc",chk:true,
+ q:"Vilka arbetsmiljörelaterade problem har främst ökat som en följd av strukturomvandlingarna de senaste 50 åren?",
+ o:["Främst stress. Det kan bero på fler vård- och omsorgsjobb där klientens behov styr, vilket minskar egenkontrollen. Men det finns också andra orsaker, t.ex. konkurrens och hårda krav.",
+  "Främst brist på social stimulans, t.ex. på grund av fler tekniska jobb där uppgifterna görs självständigt och utan kontakt med andra människor."],a:0,
+ why:"Fler högstressjobb (höga krav, låg kontroll) i människoinriktade tjänster, där klienten och inte den anställde styr tempot.",
+ alt:"Fysiskt bättre, psykiskt mer pressat."},
+{id:"s1q-35",f:null,s:"sem1",p:"quiz",l:2,t:"Oeschs klasser och strukturförändringar",r:"Seminarium 1 · quiz fråga 35 · F4 bild 29, 33 · Oesch 2006",type:"mc",chk:true,
+ q:"Vilka klasser i Oeschs schema kan förväntas minska respektive öka som en följd av strukturförändringarna de senaste 50 åren?",
+ o:["Klasser högre upp i hierarkin har vuxit med kunskapssamhället. Mer service och mindre tillverkningsindustri har förskjutit fördelningen horisontellt från teknisk till mellanmänsklig logik. Många administrativa jobb har minskat med digitaliseringen (t.ex. sekreterare) men delvis ersatts av andra supporttjänster (t.ex. callcenter).",
+  "Klasser längre ner har vuxit eftersom högre utbildning gör att man kan ta även enkla jobb. Fördelningen har förskjutits från mellanmänsklig till teknisk logik, eftersom läkare och socialsekreterare använder tekniska hjälpmedel, och digitaliseringen har ökat behovet av administrativa yrken."],a:0,
+ why:"Uppgradering = högre klasser växer. Serviceexpansion = förskjutning mot den mellanmänskliga logiken. Digitaliseringen tar bort vissa kontorsjobb men skapar andra supportjobb.",
+ alt:"Industrin krymper, kunskap och service växer."}
+);
 /* ================= MOTOR ================= */
 const LVL={1:"Grund",2:"Begrepp i fall",3:"Tentanivå"};
 const LCOL=["var(--blue)","var(--teal)","var(--yellow)","var(--pink)","var(--purple)","var(--orange)"];
 const TR={};
 LECT.forEach((x,i)=>TR["f"+x.n]={name:x.title,short:"F"+x.n,g:String(x.n),c:LCOL[i%LCOL.length],size:8,lect:x.n,
   desc:"Grund → begrepp i fall → tentanivå. Varje omgång börjar där du är svagast."});
-Object.keys(SIDE).forEach(k=>TR[k]={...SIDE[k],short:SIDE[k].name});
+Object.keys(SIDE).forEach(k=>{TR[k]={...SIDE[k],short:SIDE[k].name};
+  (SIDE[k].parts||[]).forEach((pt,i)=>TR[k+"."+pt.p]={...SIDE[k],name:SIDE[k].name+" · "+pt.name,short:pt.name,desc:pt.desc,parent:k,part:pt.p,first:i===0,parts:null});});
 TR.final={name:"Tentarunda",short:"Tentarunda",g:"T",c:"var(--red)",size:10,
   desc:"Blandade tentanivåfrågor från alla föreläsningar och gamla tentor, med samma frågetyper som på tentan."};
 const trackOf=q=>q.f?"f"+q.f:q.s;
-const byTrack=k=>k==="final"?Q.filter(q=>q.l===3&&q.s!=="aberg"):Q.filter(q=>trackOf(q)===k);
+const partOf=q=>q.p||(SIDE[q.s]&&SIDE[q.s].parts?SIDE[q.s].parts[0].p:null);
+const byTrack=k=>k==="final"?Q.filter(q=>q.l===3&&q.s!=="aberg"&&q.p!=="quiz")
+  :TR[k]&&TR[k].part?Q.filter(q=>q.s===TR[k].parent&&partOf(q)===TR[k].part):Q.filter(q=>trackOf(q)===k);
 
 /* ---------- state ---------- */
 const LS="akpa-soc-v1";
@@ -1583,12 +1813,16 @@ function levelSheet(k){
   const lv=[1,2,3].filter(l=>qs.some(q=>q.l===l)).map(l=>{const p=masteryOf(qs.filter(q=>q.l===l));
     return `<div class="lv"><span>${LVL[l]}</span><div class="meter"><i style="width:${p}%"></i></div><b>${p} %</b></div>`;}).join("");
   const plist=k==="pers"?LECT.map(x=>{const ps=PERS.filter(p=>p.f===x.n);return ps.length?`<div class="plist"><b>F${x.n} · ${esc(x.title)}</b>${ps.map(p=>`<div class="prow"><span>${esc(p.n)}</span>${esc(p.k)}</div>`).join("")}</div>`:"";}).join(""):"";
+  const parts=t.parts?`<div class="parts">${t.parts.map(pt=>{const kk=k+"."+pt.p,pq=byTrack(kk),pm=masteryOf(pq);
+    return `<div class="part"><div class="ph"><b>${esc(pt.name)}</b><span>${pq.length} frågor · ${pm} %</span></div><div class="meter"><i style="width:${pm}%"></i></div>
+      <p>${esc(pt.desc)}</p><button class="btn wide" style="--c:${t.c}" data-part="${kk}"${pq.length?"":" disabled"}>${pm?"Fortsätt":"Starta"}</button></div>`;}).join("")}</div>`:"";
   sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>${plist}
      ${t.lect&&lv?`<div class="lvls">${lv}</div>`:`<div class="meter"><i style="width:${m}%"></i></div>`}
      <p style="font-size:13px">${open?`${m} % av ${n} frågor klara · ${per} frågor per omgång`:"Inga frågor än."}</p></div>
-   ${open?`<button class="btn wide" style="--c:${t.c}" id="go">${m?"Fortsätt":"Starta"}</button>`:""}
+   ${parts}${open?`<button class="btn wide${t.parts?" plain":""}" style="--c:${t.c}" id="${t.parts?"mix":"go"}">${t.parts?"Blanda båda":m?"Fortsätt":"Starta"}</button>`:""}
    <button class="linkbtn" id="closeS">Stäng</button>`);
-  const g=$("#go"); if(g) g.onclick=()=>startLesson(k);
+  const g=$("#go")||$("#mix"); if(g) g.onclick=()=>startLesson(k);
+  document.querySelectorAll("[data-part]").forEach(b=>b.onclick=()=>startLesson(b.dataset.part));
 }
 
 /* ---------- poäng och dagens pass ---------- */
@@ -1621,7 +1855,7 @@ function pickToday(){
 }
 let EX=null, exTimer=null;
 function pickExam(){
-  const pool=Q.filter(q=>q.l>=2&&q.s!=="aberg"&&q.type!=="text"), pick=[];
+  const pool=Q.filter(q=>q.l>=2&&q.s!=="aberg"&&q.p!=="quiz"&&q.type!=="text"), pick=[];
   const take=(arr,n)=>{shuffle(arr).filter(q=>!pick.includes(q)).slice(0,n).forEach(q=>pick.push(q));};
   take(pool.filter(q=>q.type==="tfw"),3); take(pool.filter(q=>q.type==="match"),4);
   take(pool.filter(q=>q.type==="multi"),2); take(pool.filter(q=>q.type==="cloze"),1);
