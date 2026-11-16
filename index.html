@@ -259,6 +259,23 @@ textarea:focus{outline:none;border-color:var(--blue)}
 .stop.cr .cap{left:calc(100% + 8px);text-align:left}
 .stop.cl .cap{right:calc(100% + 8px);text-align:right}
 .stop .star{right:-2px;top:-2px}
+/* stopp som öppna böcker (ingen ring runt) */
+.ring,.stop.locked .ring,.stop.todo .ring,.xcard .ring,.xcard.locked .ring{width:auto;height:auto;border-radius:0;background:none;box-shadow:none;display:block}
+.node,.xcard .node{width:100px;height:84px;border-radius:0;border:none;background:none;box-shadow:none;padding:0;position:relative;transform:none;color:var(--c);display:block;transition:transform .08s}
+.xcard .node{width:92px;height:77px}
+.node:active{transform:translateY(3px);box-shadow:none}
+.stop.locked .node,.xcard.locked .node{background:none;box-shadow:none;--c:#A9ACB3}
+.stop.todo .node{background:none;box-shadow:none;border:none;--c:#A9ACB3}
+.node svg.book{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.node>b,.node>svg:not(.book){position:absolute;left:73%;top:var(--ly,48%);transform:translate(-50%,-50%) rotate(4deg);color:var(--c)}
+.node>b{font:900 27px var(--f-round);line-height:1}
+.node.sm>b{font-size:20px}
+.node>svg:not(.book){width:22px;height:22px}
+.book .cv{fill:var(--c)}.book .dp{fill:color-mix(in srgb,var(--c) 68%,#000)}
+.book .pg{fill:#FFFDF8}.book .st{fill:#E8E1D2}.book .sl{fill:none;stroke:#CEC5B2;stroke-width:.8}
+.book .tx{fill:none;stroke:color-mix(in srgb,var(--c) 30%,#fff);stroke-width:2.2;stroke-linecap:round}
+.book .sp{stroke:color-mix(in srgb,var(--c) 30%,#E8E1D2);stroke-width:1}
+.stop .cap{top:44px}
 /* dagens pass */
 .today{margin:14px 0 4px;padding:14px 16px;border-radius:var(--r-lg);background:var(--surface);display:flex;flex-direction:column;gap:10px}
 .today .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -2279,14 +2296,25 @@ function topBar(){
   return `<header class="top"><div class="brand">${esc(COURSE.brand)}<small>Tenta ${esc(COURSE.examTxt)} · ${n?"F1–F"+n:"inga föreläsningar än"}</small></div>
     <div class="pills"><span class="pill flame" title="Dagar i rad">${I.flame}${streak()}</span><span class="pill gem" title="XP">${I.gem}${state.xp}</span><span class="pill aim" title="Träffsäkerhet">${I.aim}${acc===null?"–":acc+"%"}</span></div></header>`;
 }
-function stopHtml(k,x,y,side,cw){
+/* öppen bok; f = hur långt in i boken (0 = början, 1 = slutet) */
+function book(f){
+  const r=n=>Math.round(n*10)/10, tl=r(1.5+f*8), tr=r(9.5-f*8);
+  const page=(t,m)=>{const X=x=>m?100-x:x;
+    return `<path class="st" d="M${X(6)},${r(68-t)} L${X(6)},72 Q${X(28)},69 ${X(50)},76 L${X(50)},73 Q${X(28)},${r(64-t)} ${X(6)},${r(68-t)}Z"/>`
+     +[1,2,3].filter(j=>j*2.2<t+3).map(j=>`<path class="sl" d="M${X(6)},${r(68-t+j*(t+4)/4)} Q${X(28)},${r(64-t+j*(5+t)/4)} ${X(50)},${r(73+j*.7)}"/>`).join("")
+     +`<path class="pg" d="M${X(6)},${r(14-t)} Q${X(28)},${r(8-t)} ${X(50)},20 L${X(50)},73 Q${X(28)},${r(64-t)} ${X(6)},${r(68-t)}Z"/>`;};
+  const lines=[0,1,2,3].map(i=>`<path class="tx" d="M13,${r(24-tl*.8+i*10)} Q28,${r(19-tl*.6+i*10)} ${i===3?37:44},${r(28-tl*.2+i*10)}"/>`).join("");
+  return `<svg class="book" viewBox="0 0 100 84" aria-hidden="true"><path class="dp" d="M2,24 L50,30 L98,24 L98,80 L50,86 L2,80Z"/><path class="cv" d="M2,18 L50,24 L98,18 L98,74 L50,80 L2,74Z"/>${page(tl,0)}${page(tr,1)}${lines}<path class="sp" d="M50,20 L50,74"/></svg>`;
+}
+const bookLy=f=>`--ly:${Math.round((44-(9.5-f*8)/2)/84*100)}%`;
+function stopHtml(k,x,y,side,cw,f){
   const pos=`left:${x}px;top:${y-48}px;--cw:${cw}px`;
   if(k==="next"){const n=LECT.length+1;
-    return `<div class="stop todo ${side}" style="${pos};--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" aria-label="F${n}: coming soon">${I.plus}</button></div>
+    return `<div class="stop todo ${side}" style="${pos};--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" style="${bookLy(f)}" aria-label="F${n}: coming soon">${book(f)}${I.plus}</button></div>
       <div class="cap">F${n}<span>Coming soon :)</span></div></div>`;}
   const t=TR[k],m=mastery(k),open=unlocked(k),done=m>=90,small=t.g.length>1;
   return `<div class="stop ${open?"":"locked"} ${side}" style="${pos};--c:${t.c};--p:${open?m:0}">
-    <div class="ring"><button class="node${small?" sm":""}" data-lvl="${k}" aria-label="${esc(t.short)}: ${esc(t.name)}">${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
+    <div class="ring"><button class="node${small?" sm":""}" data-lvl="${k}" style="${bookLy(f)}" aria-label="${esc(t.short)}: ${esc(t.name)}">${book(f)}${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
     ${done?`<span class="star">${I.star}</span>`:""}
     <div class="cap">${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}<span>${open?m+" % klart":"Inga frågor än"}</span></div></div>`;
 }
@@ -2302,9 +2330,9 @@ function renderHome(){
   for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i];d+=` C${x0} ${y0+STEP*.55} ${x1} ${y1-STEP*.55} ${x1} ${y1}`;}
   const H=TOP+(keys.length-1)*STEP+70;
   const stops=keys.map((k,i)=>{const x=pts[i][0],r=i%2===0;
-    return stopHtml(k,x,pts[i][1],r?"cr":"cl",Math.max(80,Math.min(170,r?W-x-48-8-2:x-48-8-2)));}).join("");
-  const extra=Object.keys(SIDE).map(k=>{const t=TR[k],m=mastery(k),n=byTrack(k).length,open=n>0;
-    return `<div class="xcard${open?"":" locked"}" style="--c:${open?t.c:"var(--muted)"};--p:${m}"><div class="ring"><button class="node${t.g.length>1?" sm":""}" data-lvl="${k}" aria-label="${esc(t.name)}">${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
+    return stopHtml(k,x,pts[i][1],r?"cr":"cl",Math.max(80,Math.min(170,r?W-x-48-8-2:x-48-8-2)),i/(keys.length-1));}).join("");
+  const XF=[.2,.75,.45,.9,.3,.6], extra=Object.keys(SIDE).map((k,xi)=>{const xf=XF[xi%XF.length],t=TR[k],m=mastery(k),n=byTrack(k).length,open=n>0;
+    return `<div class="xcard${open?"":" locked"}" style="--c:${open?t.c:"var(--muted)"};--p:${m}"><div class="ring"><button class="node${t.g.length>1?" sm":""}" data-lvl="${k}" style="${bookLy(xf)}" aria-label="${esc(t.name)}">${book(xf)}${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
       <div class="cap">${esc(t.name)}<span>${open?`${m} % klart · ${n} frågor`:"Inte uppladdad"}</span></div></div>`;}).join("");
   const wk=weakTopics(), dl=daysLeft();
   const goal=dailyGoal(), dn=todayDone(), gp=Math.min(100,Math.round(100*dn/goal));
@@ -2313,7 +2341,7 @@ function renderHome(){
      <p>${dn>=goal?`<span class="done">Dagens mål klart.</span> Mer träning nu ger extra marginal.`:`Mål räknat mot tentan ${esc(COURSE.examTxt)}: svaga punkter först, sedan nya frågor och repetition.`}${dl<=4?" Gör exempeltentan idag.":""}</p>
      <button class="btn wide" style="--c:var(--orange)" data-today="1">${dn?"Fortsätt dagens pass":"Starta dagens pass"}</button></section>`:"";
   const ex=state.exams||[], lastEx=ex[ex.length-1], bestEx=ex.reduce((b,x)=>!b||x.got/x.max>b.got/b.max?x:b,null);
-  const exCard=`<div class="xcard" style="--c:var(--red);--p:${lastEx?Math.round(100*lastEx.got/lastEx.max):0}"><div class="ring"><button class="node sm" data-exam="1" aria-label="Exempeltenta"><b>ET</b></button></div>
+  const exCard=`<div class="xcard" style="--c:var(--red);--p:${lastEx?Math.round(100*lastEx.got/lastEx.max):0}"><div class="ring"><button class="node sm" data-exam="1" style="${bookLy(.97)}" aria-label="Exempeltenta">${book(.97)}<b>ET</b></button></div>
       <div class="cap">Exempeltenta<span>${lastEx?`Senast ${lastEx.got}/${lastEx.max} p · bäst ${Math.round(100*bestEx.got/bestEx.max)} %`:`${pickExam().reduce((a,q)=>a+qPts(q),0)} p, tid, facit efteråt`}</span></div></div>`;
   const wkHtml=wk.length?`<div class="group">${wk.map(w=>`<div class="row"><span class="dot"></span><span class="t">${esc(w.t)}<span class="r">${esc([...w.refs].join(", "))} · ${w.open} fråga${w.open>1?"r":""} kvar</span></span><span class="pct">${w.rate} %<small style="display:block;font:600 11px var(--f-text);color:var(--muted);text-align:right">fel</small></span></div>`).join("")}</div>
     <div style="margin-top:14px"><button class="btn wide" style="--c:var(--red)" data-weak="1">Träna svaga punkter</button></div>`
