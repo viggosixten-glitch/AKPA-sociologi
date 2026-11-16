@@ -328,6 +328,27 @@ section.today .meter{--c:var(--leaf)}
 .xcard{flex:0 0 150px;scroll-snap-align:start;box-shadow:0 3px 0 var(--hair);gap:8px}
 .xcard .meter{width:100%;height:6px;margin:2px 0 0}
 .section-h{margin-top:24px}
+/* v2: mindre text, hälsning direkt på bakgrunden, dagens mål primärt */
+.hero{background:none;box-shadow:none;min-height:0;color:var(--ink);display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:18px 2px 0;border-radius:0;overflow:visible}
+.hero h2{font-size:30px;color:var(--ink)}
+.hero .count{background:none;padding:0;text-align:right;color:var(--forest-2)}
+.hero .count small{text-align:right;color:var(--muted);opacity:1}
+section.today{background:linear-gradient(150deg,var(--leaf),var(--forest-2));color:#fff;box-shadow:0 5px 0 color-mix(in srgb,var(--forest) 80%,#000);padding:18px}
+section.today h3{font-size:22px;color:#fff}
+section.today .n{color:#fff;opacity:.9;font-size:18px}
+section.today .meter{--c:#fff;background:rgba(255,255,255,.28);height:12px}
+section.today .btn{color:var(--forest);box-shadow:0 4px 0 color-mix(in srgb,var(--forest) 55%,#000)}
+.cont{background:var(--surface);color:var(--ink);box-shadow:0 3px 0 var(--hair);padding:10px 14px 10px 8px;gap:10px}
+.cont .ct-book{width:84px}.cont .ct-book .node{width:80px;height:67px}
+.cont .kick{color:var(--muted);opacity:1;font-size:11.5px}
+.cont h3{color:var(--ink);font-size:17px}
+.cont .meter{--c:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--surface));margin:8px 0 0;height:7px}
+.cont .go{flex:none;width:44px;height:44px;border-radius:50%;border:none;background:color-mix(in srgb,var(--leaf) 16%,var(--surface));color:var(--leaf);display:grid;place-items:center;font:900 26px var(--f-round)}
+.cont .go svg{width:20px;height:20px}
+.stop .cap .meter{height:5px;margin:6px 0 1px;background:color-mix(in srgb,var(--c) 22%,var(--surface))}
+.stop .cap{padding:6px 11px 7px;width:max-content;max-width:var(--cw)}
+.pathbar{padding:10px 14px}
+.stats{margin-top:12px}
 /* dagens pass */
 .today{margin:14px 0 4px;padding:14px 16px;border-radius:var(--r-lg);background:var(--surface);display:flex;flex-direction:column;gap:10px}
 .today .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -2327,6 +2348,7 @@ const lcFirst=s=>/^[A-ZÅÄÖ][a-zåäö]/.test(s)?s.charAt(0).toLowerCase()+s.s
 
 
 const I={
+ play:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
  flag:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2.5a1 1 0 0 1 1 1V4h10.2a.8.8 0 0 1 .6 1.3L15.6 8.5l2.2 3.2a.8.8 0 0 1-.6 1.3H7v8a1 1 0 1 1-2 0V3.5a1 1 0 0 1 1-1z"/></svg>',
  flame:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.6 2.3c.4 3-1.3 4.6-2.7 6.2C8.4 10.1 7 11.7 7 14.3a5 5 0 0 0 10 0c0-1.7-.7-3-1.4-4 .1 1.3-.4 2.5-1.6 2.9.6-3.3-.3-7.6-1.4-10.9z"/></svg>',
  gem:'<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9z"/></svg>',
@@ -2346,7 +2368,7 @@ let screen="home", L=null;
 function render(){ screen==="home"?renderHome():screen==="lesson"?renderQ():renderSum(); }
 function topBar(){
   const acc=accuracy(), n=LECT.length;
-  return `<header class="top"><div class="brand">${esc(COURSE.brand)}<small>Tenta ${esc(COURSE.examTxt)} · ${n?"F1–F"+n:"inga föreläsningar än"}</small></div>
+  return `<header class="top"><div class="brand">${esc(COURSE.brand)}</div>
 </header>`;
 }
 /* öppen bok; f = hur långt in i boken (0 = början, 1 = slutet) */
@@ -2364,12 +2386,12 @@ function stopHtml(k,x,y,side,cw,f){
   const pos=`left:${x}px;top:${y-48}px;--cw:${cw}px`;
   if(k==="next"){const n=LECT.length+1;
     return `<div class="stop todo ${side}" style="${pos};--c:var(--muted);--p:0"><div class="ring"><button class="node" data-next="1" style="${bookLy(f)}" aria-label="F${n}: coming soon">${book(f)}${I.plus}</button></div>
-      <div class="cap">F${n}<span>Coming soon :)</span></div></div>`;}
+      <div class="cap">F${n}<span>Coming soon</span></div></div>`;}
   const t=TR[k],m=mastery(k),open=unlocked(k),done=m>=90,small=t.g.length>1;
   return `<div class="stop ${open?"":"locked"} ${side}" style="${pos};--c:${t.c};--p:${open?m:0}">
     <div class="ring"><button class="node${small?" sm":""}" data-lvl="${k}" style="${bookLy(f)}" aria-label="${esc(t.short)}: ${esc(t.name)}">${book(f)}${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
     ${done?`<span class="star">${I.star}</span>`:""}
-    <div class="cap">${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}<span>${open?m+" % klart":"Inga frågor än"}</span></div></div>`;
+    <div class="cap">${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}<div class="meter"><i style="width:${m}%"></i></div></div></div>`;
 }
 /* landskap (hero och äng) */
 function hills(w,h,dark){
@@ -2406,44 +2428,41 @@ function renderHome(){
   deco+=tree(W-26,H-30,1.1,1)+bush(30,H-18,1.2)+tree(22,40,.8,0)+flower(W-60,34,"f2");
   const XF=[.2,.75,.45,.9,.3,.6], extra=Object.keys(SIDE).map((k,xi)=>{const xf=XF[xi%XF.length],t=TR[k],m=mastery(k),n=byTrack(k).length,open=n>0;
     return `<div class="xcard${open?"":" locked"}" style="--c:${open?t.c:"var(--muted)"};--p:${m}"><div class="ring"><button class="node${t.g.length>1?" sm":""}" data-lvl="${k}" style="${bookLy(xf)}" aria-label="${esc(t.name)}">${book(xf)}${open?`<b>${esc(t.g)}</b>`:I.lock}</button></div>
-      <div class="cap">${esc(t.name)}<span>${open?`${m} % · ${n} frågor`:"Inte uppladdad"}</span></div><div class="meter"><i style="width:${m}%"></i></div></div>`;}).join("");
+      <div class="cap">${esc(t.name)}</div><div class="meter"><i style="width:${m}%"></i></div></div>`;}).join("");
   const wk=weakTopics(), dl=daysLeft(), acc=accuracy();
   const goal=dailyGoal(), dn=todayDone(), gp=Math.min(100,Math.round(100*dn/goal));
   /* fortsätt: första föreläsningen som inte är klar */
   const ck=keys.filter(k=>k!=="next").find(k=>unlocked(k)&&mastery(k)<90)||"final", ci=keys.indexOf(ck), ct=TR[ck], cm=mastery(ck);
   const contHtml=`<section class="cont" style="--c:${ct.c}">
-     <div class="ct-txt"><span class="kick">Fortsätt plugga</span><h3>${esc(ct.lect?"F"+ct.lect+" · "+ct.name:ct.name)}</h3>
-       <p>${cm} % klart · ${byTrack(ck).length} frågor</p><div class="meter"><i style="width:${cm}%"></i></div>
-       <button class="btn" style="--c:var(--leaf)" data-cont="${ck}">Fortsätt</button></div>
-     <div class="ct-book"><div class="node${ct.g.length>1?" sm":""}" style="${bookLy(ci/(keys.length-1))}">${book(ci/(keys.length-1))}<b>${esc(ct.g)}</b></div></div></section>`;
-  const todayHtml=dl>=0?`<section class="today"><div class="hd"><span class="tico">${I.aim}</span><div><h3>Dagens mål</h3><p>${dn>=goal?`<span class="done">Klart för idag.</span> Mer träning ger extra marginal.`:`${goal} frågor, räknat mot tentan ${esc(COURSE.examTxt)}`}${dl<=4?" Gör exempeltentan idag.":""}</p></div><span class="n">${dn}/${goal}</span></div>
+     <div class="ct-book"><div class="node${ct.g.length>1?" sm":""}" style="${bookLy(ci/(keys.length-1))}">${book(ci/(keys.length-1))}<b>${esc(ct.g)}</b></div></div>
+     <div class="ct-txt"><span class="kick">Fortsätt</span><h3>${esc(ct.name)}</h3><div class="meter"><i style="width:${cm}%"></i></div></div>
+     <button class="go" data-cont="${ck}" aria-label="Fortsätt med ${esc(ct.name)}">${I.play}</button></section>`;
+  const todayHtml=dl>=0?`<section class="today"><div class="hd"><h3>Dagens mål</h3><span class="n">${dn}/${goal}</span></div>
      <div class="meter"><i style="width:${gp}%"></i></div>
-     <button class="btn wide" style="--c:var(--leaf)" data-today="1">${dn?"Fortsätt dagens pass":"Starta dagens pass"}</button></section>`:"";
+     <button class="btn wide" style="--c:#fff" data-today="1">${dn>=goal?"Klart · kör mer":dn?"Fortsätt":"Starta"}</button></section>`:"";
   const ex=state.exams||[], lastEx=ex[ex.length-1], bestEx=ex.reduce((b,x)=>!b||x.got/x.max>b.got/b.max?x:b,null), exPct=lastEx?Math.round(100*lastEx.got/lastEx.max):0;
   const exCard=`<div class="xcard" style="--c:var(--red);--p:${exPct}"><div class="ring"><button class="node sm" data-exam="1" style="${bookLy(.97)}" aria-label="Exempeltenta">${book(.97)}<b>ET</b></button></div>
-      <div class="cap">Exempeltenta<span>${lastEx?`Senast ${lastEx.got}/${lastEx.max} p · bäst ${Math.round(100*bestEx.got/bestEx.max)} %`:`${pickExam().reduce((a,q)=>a+qPts(q),0)} p, tid, facit efteråt`}</span></div><div class="meter"><i style="width:${exPct}%"></i></div></div>`;
+      <div class="cap">Exempeltenta${lastEx?`<span>${lastEx.got}/${lastEx.max} p</span>`:""}</div><div class="meter"><i style="width:${exPct}%"></i></div></div>`;
   const wkHtml=wk.length?`<div class="group">${wk.map(w=>`<div class="row"><span class="dot"></span><span class="t">${esc(w.t)}<span class="r">${esc([...w.refs].join(", "))} · ${w.open} fråga${w.open>1?"r":""} kvar</span></span><span class="pct">${w.rate} %<small style="display:block;font:600 11px var(--f-text);color:var(--muted);text-align:right">fel</small></span></div>`).join("")}</div>
     <div style="margin-top:14px"><button class="btn wide" style="--c:var(--red)" data-weak="1">Träna svaga punkter</button></div>`
-    :`<div class="group"><p class="note">Begrepp du svarar fel på hamnar här. De försvinner när du svarar rätt direkt i en senare omgång.</p></div>`;
+    :`<div class="group"><p class="note">Inga än.</p></div>`;
   $("#app").innerHTML=`${topBar()}
-   <section class="hero">${hills(400,120)}
-     <div class="hero-in"><div><h2>${greeting()}</h2><p>${esc(COURSE.name)} · ${LECT.length} föreläsningar · ${Q.length} frågor</p></div>
-     <div class="count">${dl>0?dl:dl===0?"Idag":"–"}<small>${dl>0?"dagar kvar":dl===0?"tenta":"tentan är gjord"}</small></div></div></section>
+   <section class="hero"><h2>${greeting()}</h2><div class="count">${dl>0?dl:dl===0?"Idag":"–"}<small>${dl>0?"dagar kvar":dl===0?"tenta":"klar"}</small></div></section>
    <section class="stats">
-     <div class="stat" style="--c:var(--orange)">${I.flame}<b>${streak()}</b><span>Dagar i rad</span></div>
+     <div class="stat" style="--c:var(--orange)">${I.flame}<b>${streak()}</b><span>i rad</span></div>
      <div class="stat" style="--c:var(--blue)">${I.gem}<b>${state.xp}</b><span>XP</span></div>
-     <div class="stat" style="--c:var(--leaf)">${I.aim}<b>${acc===null?"–":acc+"%"}</b><span>Träffsäkerhet</span></div></section>
-   ${contHtml}
+     <div class="stat" style="--c:var(--leaf)">${I.aim}<b>${acc===null?"–":acc+"%"}</b><span>rätt</span></div></section>
    ${todayHtml}
-   <div class="pathbar"><span class="pb-ico">${I.flag}</span><div><b>Föreläsningarna</b><small>F1–F${LECT.length} · tenta ${esc(COURSE.examTxt)}</small></div></div>
+   ${contHtml}
+   <div class="pathbar"><span class="pb-ico">${I.flag}</span><b>Föreläsningarna</b></div>
    <section class="meadow">${hills(400,90)}
    <div class="map" style="height:${H}px;width:${W}px" aria-label="Föreläsningar">
      <svg class="road" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
        ${deco}<path d="${d}" class="road-edge" stroke-width="30"/><path d="${d}" class="road-top" stroke-width="24"/><path d="${d}" class="road-dash" stroke-width="2.5"/>
      </svg>${stops}</div></section>
    <h3 class="section-h">Snabbträning</h3><div class="extras">${extra}${exCard}</div>
-   <h3 class="section-h">Svaga punkter</h3>${wkHtml}
-   <p class="foot">${esc(syncNote)}</p>`;
+   ${wk.length?`<h3 class="section-h">Svaga punkter</h3>${wkHtml}`:""}
+`;
   document.querySelectorAll("[data-lvl]").forEach(b=>b.onclick=()=>levelSheet(b.dataset.lvl));
   const cb=$("[data-cont]"); if(cb) cb.onclick=()=>levelSheet(cb.dataset.cont);
   const nx=$("[data-next]"); if(nx) nx.onclick=nextSheet;
