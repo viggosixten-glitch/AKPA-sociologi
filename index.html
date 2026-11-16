@@ -137,6 +137,9 @@ textarea{width:100%;min-height:170px;font:16px/1.5 var(--f-text);padding:14px 16
 textarea:focus{outline:none;border-color:var(--blue)}
 .pts{list-style:none;margin:14px 0 0;padding:0;background:var(--surface);border-radius:var(--r-md);overflow:hidden}
 .pts li + li label{border-top:.5px solid var(--hair)}
+.exans{margin:12px 0 0;background:var(--surface);border-radius:var(--r-md);padding:12px 16px;font-size:15px}
+.exans summary{font-weight:700;cursor:pointer}
+.exans p{white-space:pre-line;margin:10px 0 0;line-height:1.45}
 .pts label{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;padding:12px 16px;cursor:pointer;font-size:15px}
 .pts input{width:22px;height:22px;margin:0;accent-color:var(--good)}
 .hint{font-size:13px;color:var(--muted);margin:10px 4px 0}
@@ -306,6 +309,7 @@ const SIDE={
   sem1:{name:"Seminarium 1",g:"S1",c:"var(--orange)",size:10,desc:"Motivation, lojalitet, SDT, arbetsorganisation, klassteori och strukturförändringar. Två delmoment, eller blanda båda.",
    parts:[{p:"disk",name:"Diskussionsfrågor",desc:"Diskussions- och instuderingsfrågorna, med blandade frågetyper. Svaren bygger på föreläsningarna, litteraturen och quizets facit."},
     {p:"quiz",name:"Quiz",desc:"Lärarens quiz till seminariet, förenklat: 35 korta frågor med två alternativ."}]},
+  begr:{name:"Begreppslista",g:"B",c:"var(--teal)",size:10,desc:"Kursens begreppslista. Varje begrepp ger två frågor som också blandas in i sin föreläsning och i dagens pass. Begrepp utan föreläsning ännu (arbetsmarknadspolitik) finns bara här."},
   pers:{name:"Personer",g:"P",c:"var(--pink)",size:10,desc:"Alla personer från föreläsningarna: vem sa vad, och vad förknippas de med. Fylls på när nya föreläsningar kommer."}
 };
 const T24="Tenta 24/25";
@@ -1847,6 +1851,92 @@ Q.push(
  why:"Kunskap och service växer. Digitaliseringen tar bort vissa kontorsjobb.",
  alt:"Industrin krymper, kunskap och service växer."}
 );
+/* ================= EXEMPELTENTA =================
+   Lärarens exempel på tentafrågor och svar (matchning och essä från senaste terminerna).
+   s:"ex" = ingår i Exempeltentan (ersätter tentasimuleringen). pt = poäng. ex = lärarens exempelsvar/bedömning.
+   ex-10 ligger i F4 i stället: läraren skriver att andra halvan troligen inte kommer i år. */
+const EXT="Exempeltenta";
+Q.push(
+{id:"ex-01",f:null,s:"ex",l:3,t:"Krav–kontroll-modellen",r:EXT+" · Krav-kontroll-modellen, matcha i bild · F1 bild 20",type:"match",chk:true,
+ q:"Sortera in jobbkategorierna i krav–kontroll-modellen.",
+ cats:["Lågstressjobb","Aktiva jobb","Passiva jobb","Högstressjobb"],
+ items:[{t:"Låga krav, hög egenkontroll",a:0},{t:"Låga krav, låg egenkontroll",a:2},{t:"Höga krav, hög egenkontroll",a:1},{t:"Höga krav, låg egenkontroll",a:3}],
+ why:"Facit: låga krav ger lågstressjobb (hög kontroll) och passiva jobb (låg kontroll). Höga krav ger aktiva jobb (hög kontroll) och högstressjobb (låg kontroll). På tentan är bilden ritad med egenkontroll hög till vänster och arbetskrav låga överst, så läs axlarna noga.",
+ alt:"Kontroll gör krav hanterbara. Höga krav + hög kontroll = aktiv. Höga krav + låg kontroll = högstress (job strain)."},
+{id:"ex-02",f:null,s:"ex",l:3,t:"Arbetsdelning",r:EXT+" · Organisationsförändring – äldreomsorg · F2 bild 26",type:"cloze",chk:true,
+ q:"Organisationsförändring i äldreomsorgen. Fyll i luckorna. Två alternativ passar inte någonstans.",
+ text:"En arbetsplats inom äldreomsorgen hade från början en {hög arbetsdelning} med detaljerade uppgifter som vårdpersonalen skulle följa. Riktlinjer och tidsramar var satta, alla uppgifter var styrda i minsta detalj, och en arbetare hade hand om enbart städning och en annan om enbart tvättning. {Arbetsberikning} införs genom att minska detaljkontrollen och ge personalen mer {autonomi} i utförandet av sina arbetsuppgifter. Personalen får även hantera sitt schema och bemanningen. Detta medför även {arbetsutvidgning} genom att personalen alternerar mellan vårdgivande och administrativa uppgifter.",
+ extra:["numerär flexibilitet","standardisering"],
+ why:"Facit uppifrån och ner: hög arbetsdelning, arbetsberikning, autonomi, arbetsutvidgning. Berikning = mindre vertikal arbetsdelning (mer ansvar och beslut). Utvidgning = mindre horisontell arbetsdelning (fler sorters uppgifter). Läraren: den som bytte plats på arbetsberikning och autonomi fick nästan full poäng.",
+ alt:"Detaljstyrning och en uppgift per person = hög arbetsdelning. Mer egen kontroll = berikning. Fler sorters uppgifter = utvidgning."},
+{id:"ex-03",f:null,s:"ex",l:3,t:"Klasscheman",r:EXT+" · Klasscheman, matcha i bild · F3 och F4",type:"match",chk:true,
+ q:"Vilken dimension i Goldthorpes, Wrights eller Oeschs klasschema förklarar mekanismen?",
+ cats:["Goldthorpe: anställningsrelation","Wright: expertis","Wright: auktoritet","Oesch: teknisk logik","Oesch: organisatorisk logik","Oesch: mellanmänsklig logik"],
+ items:[{t:"Arbetets karaktär: administrativa aspekter av arbetet är företrädande",a:4},
+  {t:"Arbetets karaktär: tekniska aspekter av arbetet är företrädande",a:3},
+  {t:"Svårt att övervaka och direkt styra arbetet, och innehav av sällsynta och eftertraktade kompetenser i en generell bemärkelse",a:1},
+  {t:"Arbetets karaktär: mellanmänskliga aspekter av arbetet är företrädande",a:5},
+  {t:"Antalet underordnade en anställd har, där många underordnade ger en speciell relation till arbetsgivaren",a:2},
+  {t:"Svårt att övervaka och direkt styra arbetet, och specialiserad, organisationsspecifik kompetens som växer med tiden i organisationen",a:0}],
+ why:"Facit (FCEBAD i bilden): Goldthorpe = övervakningssvårigheter + organisationsspecifik kompetens. Wright = generell, eftertraktad expertis och auktoritet (antal underordnade). Oesch = arbetslogik: teknisk, organisatorisk (administrativ) och mellanmänsklig.",
+ alt:"Generell kompetens = Wright, organisationsspecifik = Goldthorpe. Antal underordnade = Wrights auktoritet. Arbetets karaktär = Oeschs arbetslogik."},
+{id:"ex-04",f:null,s:"ex",l:3,pt:3,t:"Könslönegapet",r:EXT+" · Könslönegapet – essä (3 p) · F5 bild 29–41",type:"text",chk:true,
+ q:"Resonera kort kring sanningshalten i påståendet: ”Könslönegapet är generellt mindre i högkvalificerade yrken eftersom dessa yrken erbjuder mer flexibilitet, vilket underlättar för kvinnor att kombinera arbetsliv och familjeansvar.” Varför är det sant eller falskt? (max 75 ord)",
+ pts:["Påståendet är falskt: gapet är störst i högkvalificerade yrken","Där belönas ständig tillgänglighet, tidskrävande villkor och face-time (Goldin; Magnusson & Nermo)","Män kan i högre grad leva upp till kraven; kvinnor med större ansvar för barn och hushåll väljer flexiblare jobb","Följd: kvinnor får lägre lön och sämre karriär trots likvärdig utbildning och kompetens"],
+ ex:"Krav på ständig tillgänglighet/tidskrävande arbetsvillkor/time-consuming work är en av de största orsakerna till löneskillnader mellan män och kvinnor i yrken med höga kvalifikationskrav/prestige. Arbeten med höga krav på tillgänglighet och som belönar ”face time” på arbetsplatsen – där arbetare förväntas vara på plats och tillgängliga utöver normal arbetstid – gynnar män som i högre grad kan leva upp till dessa krav. Kvinnor, som ofta har större ansvar för barn och hushåll, väljer istället yrken som tillåter mer flexibla arbetstider och bättre balans mellan arbete och privatliv. Detta leder till att kvinnor, trots likvärdig utbildning och kompetens, hamnar i positioner med lägre löner och sämre karriärmöjligheter jämfört med män.",
+ alt:"Börja med ”falskt”, säg var gapet är störst, och förklara med Goldin: det är bristen på flexibilitet som driver gapet."},
+{id:"ex-05",f:null,s:"ex",l:3,pt:3,t:"Svenska modellen",r:EXT+" · Strejker – essä (3 p) · Esser & Sjöberg 2014",type:"text",chk:true,
+ q:"Resonera kort kring sanningshalten i påståendet: ”Omfattande strejker är vanliga i Sverige eftersom fackföreningarna har mer makt och inflytande än i andra länder.” Varför är det sant eller falskt? (max 50 ord)",
+ pts:["Påståendet är falskt (strejker är ovanliga)","Facket har visserligen mer makt än i de flesta andra länder","Makten tar sig uttryck i ordnade, centraliserade förhandlingar och kollektivavtal med hög täckningsgrad","Arbetsgivarsidan är också starkt organiserad (samförstånd, utvecklad konfliktlösning)"],
+ ex:"Fackföreningarna har visserligen mer makt än i de flesta andra länder, men det tar sig snarare uttryck i ordnade, centraliserade förhandlingar och kollektivavtal med hög täckningsgrad, där även arbetsgivarsidan är starkt organiserad. (Den då pågående Tesla-konflikten är atypisk för svensk arbetsmarknad.)",
+ alt:"Halva påståendet stämmer (facket är starkt). Det som inte stämmer är slutsatsen om strejker. Tänk nordisk modell: starka parter, partsreglering, få konflikter."},
+{id:"ex-06",f:null,s:"ex",l:3,pt:6,t:"Självbestämmandeteori",r:EXT+" · Motivationer – exemplifiera (6 p) · F2 bild 15–18 · Gagné & Deci",type:"text",chk:true,
+ q:"Använd realistiska exempel på människor som utför arbetsuppgifter av olika anledningar för att exemplifiera och tydliggöra skillnaderna mellan tre former av motivation inom självbestämmandeteorin: 1. Intrinsikal. 2. Introjicerad. 3. Identifierad. (max 300 ord)",
+ pts:["Intrinsikal: ett realistiskt exempel där personen gör uppgiften för att den i sig är intressant/rolig","Introjicerad: ett exempel där personen drivs av skuld, skam, rädsla eller att inte vara tillräcklig (inre tvång, kontrollerad)","Identifierad: ett exempel där personen inte tycker uppgiften är rolig men inser och värdesätter dess vikt","Skillnaderna blir tydliga: grad av autonom kontra kontrollerad motivation"],
+ ex:"Exempel ur lärarens material. Intrinsikal – Jesper är besatt av pengar. Han följer alla börsrapporter och känner stor tillfredsställelse när han lyckas förutsäga vilka portföljer som ger mest utdelning. Han dokumenterar det på sin blogg men glömmer ofta att posta, eftersom han redan gått vidare till nästa dags börskurser. Introjicerad – Felix kämpar sig igenom arbetsdagarna utan egentlig motivation. Han drivs av skuld och rädsla för att inte vara tillräcklig i sin pappas ögon; pappan tycker att varje person ska försörja sig själv och inte vara beroende av andra. Identifierad – Stefan är tunnelbanevärd. Förr sålde han biljetter och hjälpte passagerare, vilket gav status och glädje, men tekniken har tagit bort det. Nu ropar han ut förseningar och förlitar sig på plikten för att gå till jobbet – men han förstår att jobbet är viktigt för att alla ska komma fram i tid.",
+ alt:"Ställ samma fråga för varje person: gör de det för att det är kul (intrinsikal), för att slippa må dåligt (introjicerad) eller för att de tycker att det är viktigt (identifierad)?"},
+{id:"ex-07",f:null,s:"ex",l:3,pt:6,t:"Tillämpning av teori",r:EXT+" · Tillämpning av teori i arbetslivet (6 p) · F2, F3, F5",type:"text",chk:true,
+ q:"Välj en av teorierna: 1. Självbestämmandeteori. 2. Goldins teori om kön och ojämlikhet. 3. Wrights klassteori. Beskriv kort hur du skulle kunna använda teorin i ditt nuvarande eller kommande yrkesliv: antingen (a) hur teorin kan ligga till grund för att förändra eller utveckla något på en arbetsplats, eller (b) hur teorin hjälper dig förstå en situation, handling eller ett beslut hos arbetsgivaren eller arbetstagaren. (max 300 ord)",
+ pts:["Teorin beskrivs korrekt med sina centrala begrepp","Ett konkret arbetsliv (verkligt eller tydligt beskrivet påhittat)","Tydlig koppling mellan teorin och situationen/förändringen","Visar vad teorin förklarar eller vad förändringen leder till"],
+ ex:"Lärarens bedömning: tydliga tillämpningar på nuvarande eller tidigare arbetsliv, där teorin används för att förstå en arbetssituation, ger ofta höga poäng. För abstrakta tillämpningar ger oftast lägre poäng. Påhittade exempel ger höga poäng om kopplingen till teorin är tydlig.\n\nExempel Goldin (HR-ansvarig): högre tjänster kräver resor, övertid, ständig tillgänglighet och face-time-möten, som män har lättare att kombinera med familjen. Förändringar: (1) mejl med fördröjning så att de når mottagaren på tider de själva valt, max 8 timmar per dag, (2) färre tjänsteresor genom distansmöten, och resor fördelade till dem som inte rest på länge, (3) inga face-time-möten bokas direkt i andras kalendrar.\n\nExempel Wright (montör vid löpande band): ingen lojalitet mot företaget, facklig kamp för högre löner. Arbetsgivaren hänvisar till alla arbetslösa som kan ta jobbet billigare, inför strikta scheman, ackord och en mellanposition där befordrade arbetare övervakar de andra och blir lojala mot arbetsgivaren genom högre lön. Arbetet kräver inga särskilda kunskaper, så personalen kan lätt ersättas.\n\nExempel SDT (HR-ansvarig): personalen maskar och slutar trots intressanta uppgifter. Chefen har infört strikt arbetsdelning, kontroll av mejl och hot om sämre löneutveckling. Kontrollerna och de externa incitamenten tas bort, personalen får själv formulera vad som motiverar dem, de motiverade får mer ansvar och frihet och blir förebilder med konkret feedback.",
+ alt:"Välj den teori du kan bäst, ta ett jobb du känner (t.ex. baren) och visa steg för steg: teorins begrepp → vad du ser på jobbet → vad du skulle ändra."},
+{id:"ex-08",f:null,s:"ex",l:3,pt:3,t:"Arbetsdelning",r:EXT+" · Fordistisk och socioteknisk organisation · F2 bild 20, 26",type:"text",chk:true,
+ q:"Använd begreppen vertikal och horisontell arbetsdelning och jämför strukturen i en fordistisk och en socioteknisk organisation. (max 100 ord)",
+ pts:["Fordistisk: hög vertikal arbetsdelning – tydliga hierarkier där någon styr och någon utför","Fordistisk: hög horisontell arbetsdelning – avgränsade enstaka moment för varje roll","Socioteknisk: låg vertikal arbetsdelning – autonomi i utförandet (arbetsberikning)","Socioteknisk: låg horisontell arbetsdelning – rotation mellan olika typer av uppgifter (arbetsutvidgning)"],
+ ex:"En fordistisk organisation har en hög arbetsdelning i både vertikal och horisontell bemärkelse, dvs. både tydliga hierarkier där någon styr och någon utför arbetet och avgränsade enstaka arbetsmoment för varje roll. En socioteknisk organisation har en låg arbetsdelning i både vertikal och horisontell bemärkelse, dvs. både autonomi i utförandet av uppgiften och rotation mellan olika typer av uppgifter. (Varianter med andra organisationsformer besvaras i samma stil.)",
+ alt:"Vertikal = vem bestämmer. Horisontell = hur smala uppgifterna är. Fordism: hög på båda. Socioteknik: låg på båda."},
+{id:"ex-09",f:null,s:"ex",l:3,pt:6,t:"Organisationsformer",r:EXT+" · Organisationsformer (6 p) · F2 bild 23–29",type:"text",chk:true,
+ q:"Välj en av organisationsformerna: 1. Socioteknisk. 2. Agil. 3. Lean. 4. Lärande organisation. Beskriv kort hur du skulle kunna använda kunskap om denna form av organisation i ditt nuvarande eller kommande yrkesliv. Förklara hur teorin skulle kunna ligga till grund för att förändra eller utveckla en verkligt upplevd eller påhittad arbetsorganisation. (max 300 ord)",
+ pts:["Organisationsformen beskrivs korrekt: mål, arbetsdelning och styrning (t.ex. lean: eliminera slöseri, team, små moment, standardisering, målstyrning; socioteknisk: teori Y, självstyrande grupper, berikning och utvidgning)","En konkret arbetsplats beskrivs (verklig eller påhittad)","Tydlig koppling: vilka förändringar formen leder till på just den arbetsplatsen","Vad förändringen ger, och gärna en risk eller avvägning"],
+ ex:"Samma bedömning som för tillämpningsfrågan: konkreta, verkliga eller tydligt påhittade arbetsplatser med tydlig koppling till organisationsformen ger höga poäng, abstrakta svar lägre.",
+ alt:"F2 bild 24 (lean), 26 (socioteknik), 28 (lärande) och 29 (agil). Välj en, ta dess arbetsdelning och styrning och använd dem på en arbetsplats du känner."},
+{id:"ex-11",f:null,s:"ex",l:3,pt:3,t:"Arbetsdelning",r:EXT+" · Arbetsdelning (A) organisationsperspektiv · F1, F2",type:"text",chk:true,
+ q:"Varför uppstår arbetsdelning, och vad har den för primär fördel och primär nackdel? (A) Svara ur ett organisationsperspektiv. (max 150 ord)",
+ pts:["Varför: specialisering och rationell arbetsindelning, för att eliminera slöseri med resurser","Primär fördel: effektivitet (taylorism/fordism)","Primär nackdel om den blir för långtgående: brist på utveckling och sammanhang, alienation"],
+ ex:"Lärarens bedömning: argument om arbetsdelningens fördelar och nackdelar rotade i kursens innehåll. Organisationsnivå – anledning: specialisering/rationell arbetsindelning, eliminera slöseri med resurser. Primär fördel: effektivt, taylorism/fordism. Primär nackdel (om för långtgående): brist på utveckling, sammanhang/alienation etc.",
+ alt:"Organisation: varför (effektivisera) → fördel (taylorism/fordism ger effektivitet) → nackdel (Marx: alienation)."},
+{id:"ex-12",f:null,s:"ex",l:3,pt:3,t:"Arbetsdelning",r:EXT+" · Arbetsdelning (B) samhällsperspektiv · F1, F3",type:"text",chk:true,
+ q:"Varför uppstår arbetsdelning, och vad har den för primär fördel och primär nackdel? (B) Svara ur ett samhällsperspektiv. (max 150 ord)",
+ pts:["Varför: specialisering i yrkesroller – opraktiskt att byta yrke ofta eftersom yrkesroller tar tid att lära","Primär fördel: högre kompetens, samhället fungerar effektivt, ömsesidigt samarbete/beroende (Durkheim)","Primär nackdel: fastlåsning i klasser inom och mellan generationer, som ger skillnader i inkomst, hälsa och livschanser"],
+ ex:"Lärarens bedömning, samhällsnivå – anledning: specialisering i yrkesroller; opraktiskt att växla yrke för ofta pga. inlärningen av yrkesroller. Primär fördel: högre kompetens, samhället fungerar effektivt, ömsesidigt samarbete. Primär nackdel: ger fastlåsning i klasser inom och mellan generationer som ger skillnader i inkomst, hälsa, allmänna livschanser.",
+ alt:"Samhälle: yrkesroller (varför) → Durkheims beroende och kompetens (fördel) → klassamhället (nackdel)."}
+);
+/* --- härledda ur exempeltentan, för vanlig träning --- */
+Q.push(
+{id:"ex-10",f:4,l:3,pt:4,t:"Paradigm och Goldthorpe",r:EXT+" · Tekniska problemet och Goldthorpe · F3, F4 (troligen inte i år)",type:"text",chk:true,
+ q:"Vad är skillnaden på det ”tekniska problemet” under det industriella paradigmet och under IT-paradigmet? Hur påverkar skillnaden de centrala mekanismerna i Goldthorpes klassteori? (max 200 ord)",
+ pts:["Industriella paradigmet: problemet är hög grad av standardisering","IT-paradigmet: problemet är hög grad av anpassning","Goldthorpe bygger på standardisering: arbetare gör standardiserade, övervakningsbara uppgifter; tjänstemän specialiserar sig på organisationens komplexa standardisering och belönas för att stanna","När anpassning ersätter standardisering minskar standardiserade, lättövervakade jobb och behovet av organisationsspecifik kompetens; extern kompetens behövs i stället – teorin passar sämre i IT-paradigmet"],
+ ex:"Det tekniska problemet under det industriella paradigmet är hur man kan uppnå hög grad av standardisering. Under IT-paradigmet är det hur man kan uppnå en hög grad av anpassning. Goldthorpes klassteori bygger på standardisering: arbetare utför standardiserade, direkt övervakningsbara uppgifter, tjänstemän specialiserar sig på den specifika form av komplex standardisering som förekommer inom en organisation och belönas för att stanna och utveckla den. Om anpassning ersätter standardisering minskar möjligheterna att utforma standardiserade, lättövervakade positioner för arbetare, och behovet av specialisering på standardiserade komplexa system. Därmed faller en primär poäng för arbetsgivare att behålla och underhålla specifik kompetens. Behovet av anpassning föder i stället större behov av extern kompetens från mer innovativa organisationer. Goldthorpes teori är därmed inte särskilt applicerbar i den organisatoriska miljö som präglar IT-paradigmet.\n\nLärarens kommentar: andra halvan är ganska svår för den här nivån och kommer nog inte på tentan i år.",
+ alt:"Standardisering (industri) mot anpassning (IT). Goldthorpes tjänsterelation finns för att belöna organisationsspecifik kunskap – vad händer med den när allt ständigt ändras?"},
+{id:"ex-13",f:2,l:2,t:"Självbestämmandeteori",r:EXT+" · Motivationer – exemplen · F2 bild 18",type:"match",chk:true,
+ q:"Vilken form av motivation (självbestämmandeteori) visar personen?",
+ cats:["Intrinsikal","Introjicerad","Identifierad"],
+ items:[{t:"Jesper följer börsen hela dagarna och njuter av att förutsäga utdelningar, och glömmer att posta på bloggen",a:0},
+  {t:"Felix jobbar utan lust, driven av skuld och rädsla för att inte duga i sin pappas ögon",a:1},
+  {t:"Stefan tycker inte längre att jobbet som tunnelbanevärd är roligt, men förstår att det är viktigt för att alla ska komma fram",a:2}],
+ why:"Intrinsikal: aktiviteten i sig ger glädje. Introjicerad: inre tvång, skuld och självkänsla (kontrollerad). Identifierad: man ser och värdesätter vikten av uppgiften (mer autonom).",
+ alt:"Kul i sig = intrinsikal. Måste för att slippa må dåligt = introjicerad. Viktigt, fast inte kul = identifierad."}
+);
 /* ================= MOTOR ================= */
 const LVL={1:"Grund",2:"Begrepp i fall",3:"Tentanivå"};
 const LCOL=["var(--blue)","var(--teal)","var(--yellow)","var(--pink)","var(--purple)","var(--orange)"];
@@ -1857,9 +1947,10 @@ Object.keys(SIDE).forEach(k=>{TR[k]={...SIDE[k],short:SIDE[k].name};
   (SIDE[k].parts||[]).forEach((pt,i)=>TR[k+"."+pt.p]={...SIDE[k],name:SIDE[k].name+" · "+pt.name,short:pt.name,desc:pt.desc,parent:k,part:pt.p,first:i===0,parts:null});});
 TR.final={name:"Tentarunda",short:"Tentarunda",g:"T",c:"var(--red)",size:10,
   desc:"Blandade tentanivåfrågor från alla föreläsningar och gamla tentor, med samma frågetyper som på tentan."};
+TR.ex={name:"Exempeltenta",short:"Exempeltenta",g:"ET",c:"var(--red)",size:20,desc:"Lärarens exempeltenta."};
 const trackOf=q=>q.f?"f"+q.f:q.s;
 const partOf=q=>q.p||(SIDE[q.s]&&SIDE[q.s].parts?SIDE[q.s].parts[0].p:null);
-const byTrack=k=>k==="final"?Q.filter(q=>q.l===3&&q.s!=="aberg"&&q.p!=="quiz")
+const byTrack=k=>k==="begr"?Q.filter(q=>q.bg):k==="final"?Q.filter(q=>q.l===3&&q.s!=="aberg"&&q.p!=="quiz")
   :TR[k]&&TR[k].part?Q.filter(q=>q.s===TR[k].parent&&partOf(q)===TR[k].part):Q.filter(q=>trackOf(q)===k);
 
 /* ---------- state ---------- */
@@ -2032,6 +2123,138 @@ const PERS=[
     }
   });
 })();
+/* ================= BEGREPPSLISTA =================
+   Från kursens begreppslista. Varje begrepp ger två frågor (vilket begrepp? / vad innebär?) som
+   blandas in i sin föreläsning (f) och samlas i sidostoppet "begr". Begrepp utan föreläsning ännu har f:null. */
+const BEGR=[
+ /* --- F1 Arbetsvilja och arbetsmiljö --- */
+ {id:"norm",t:"Arbetsvilja som norm",f:1,b:"F1 bild 6",d:"Vi arbetar för att alla förväntas dra sitt strå till stacken, en plikt som håller ihop samhället (Durkheim)"},
+ {id:"ideologi",t:"Arbetsvilja som ideologi",f:1,b:"F1 bild 7",d:"Arbetsviljan växer ur idéer, t.ex. den lutherska arbetsetiken, men riskerar att stelna till regler (Weber)"},
+ {id:"socsam",t:"Arbete som socialt sammanhang",f:1,b:"F1 bild 9",d:"Arbetet ger sociala kontakter, ett gemensamt projekt, struktur för dagen samt status och identitet"},
+ {id:"alien",t:"Alienering",f:1,b:"F1 bild 6",d:"Arbetaren blir ett utbytbart kugghjul, frånkopplad från arbetet och dess resultat (Marx)"},
+ {id:"behov",t:"Behovsteorier",f:1,b:"F1 bild 10",d:"Basala behov som lön och trygghet måste uppfyllas först, sedan motiverar utmaningar mest (Herzberg)"},
+ {id:"ration",t:"Rationella teorier",f:1,b:"F1 bild 11",d:"Behov är värderingar som skiljer sig mellan individer och justeras efter vad som är möjligt (Locke, Vroom)"},
+ {id:"rattvisa",t:"Rättviseteorier",f:1,b:"F1 bild 11",d:"Det vi värderar formas av jämförelser med vad kollegor och andra får (Adams)"},
+ {id:"affektiv",t:"Affektiv organisationslojalitet",f:1,b:"F1 bild 12",d:"Den anställde känner och vill samma sak som organisationen"},
+ {id:"instrum",t:"Instrumentell organisationslojalitet",f:1,b:"F1 bild 12 · F3",d:"Den anställde tjänar på att vara lojal, t.ex. genom framtida löneökningar och befordran"},
+ {id:"normloj",t:"Normativ organisationslojalitet",f:1,b:"F1 bild 12",d:"Den anställde upplever sig skyldig organisationen något"},
+ {id:"krav",t:"Arbetets krav",f:1,b:"F1 bild 15, 20",d:"Hur många eller hur svåra uppgifter man måste göra och klara i arbetet"},
+ {id:"egenk",t:"Egenkontroll",f:1,b:"F1 bild 20",d:"Beslutsutrymme och autonomi: hur mycket man själv bestämmer över sitt arbete"},
+ {id:"aktiv",t:"Aktiva jobb",f:1,b:"F1 bild 20 (aktivitetsdiagonalen)",d:"Höga krav och hög egenkontroll, som ger lärande och utveckling"},
+ {id:"passiv",t:"Passiva jobb",f:1,b:"F1 bild 20 (aktivitetsdiagonalen)",d:"Låga krav och låg egenkontroll, där förmågor riskerar att tyna bort"},
+ {id:"hogstr",t:"Högstressjobb",f:1,b:"F1 bild 20 (stressdiagonalen)",d:"Höga krav och låg egenkontroll (job strain), den mest skadliga kombinationen"},
+ {id:"lagstr",t:"Lågstressjobb",f:1,b:"F1 bild 20 (stressdiagonalen)",d:"Låga krav och hög egenkontroll"},
+ /* --- F2 Organisation och ledarskap --- */
+ {id:"vertad",t:"Vertikal arbetsdelning",f:2,b:"F2 bild 26 · exempeltentan",d:"Uppdelning mellan dem som planerar och styr och dem som utför arbetet (hierarki)"},
+ {id:"horad",t:"Horisontell arbetsdelning",f:2,b:"F2 bild 26 · exempeltentan",d:"Uppdelning av arbetet i avgränsade moment, där varje roll gör en eller få sorters uppgifter"},
+ {id:"berik",t:"Arbetsberikning",f:2,b:"F2 bild 26",d:"Minskad vertikal arbetsdelning: de anställda får mer ansvar för planering och beslut"},
+ {id:"utvidg",t:"Arbetsutvidgning",f:2,b:"F2 bild 26",d:"Minskad horisontell arbetsdelning: fler sorters uppgifter och rotation mellan dem"},
+ {id:"xled",t:"X-ledare",f:2,b:"F2 bild 14",d:"Tror att människor arbetar för yttre belöningar och så lite som möjligt, och styr därför med kontroll"},
+ {id:"yled",t:"Y-ledare",f:2,b:"F2 bild 14",d:"Tror att människor drivs inifrån och vill ta ansvar, och ger därför autonomi och frihet"},
+ {id:"intrins",t:"Intrinsikal motivation",f:2,b:"F2 bild 15–18 · Gagné & Deci",d:"Man gör uppgiften för att den i sig är intressant eller rolig"},
+ {id:"extrins",t:"Extrinsikal motivation",f:2,b:"F2 bild 15–18 · Gagné & Deci",d:"Man gör uppgiften för något utanför den, som lön, belöning eller för att slippa straff"},
+ {id:"introj",t:"Introjicerad motivation",f:2,b:"F2 bild 18 · Gagné & Deci",d:"Man gör uppgiften för att slippa skuld, skam eller ångest, ett inre tvång (kontrollerad)"},
+ {id:"identif",t:"Identifierad motivation",f:2,b:"F2 bild 18 · Gagné & Deci",d:"Man gör uppgiften för att man inser och värdesätter vikten av den, fast den inte är rolig"},
+ {id:"integr",t:"Integrerad motivation",f:2,b:"F2 bild 18 · Gagné & Deci",d:"Uppgiftens värde har blivit en del av ens egen identitet och övriga värderingar"},
+ {id:"internal",t:"Internalisering",f:2,b:"F2 bild 18 · Gagné & Deci",d:"Processen där yttre krav och värderingar tas in och blir mer och mer ens egna"},
+ {id:"autkon",t:"Autonom kontra kontrollerad motivation",f:2,b:"F2 bild 18 · Gagné & Deci",d:"Hur mycket handlingen upplevs som självvald i stället för pressad av andra eller av skuld"},
+ {id:"taylor",t:"Taylorism",f:2,b:"F2 bild 19",d:"Arbetet delas i små standardiserade moment som förmän planerar, styr och övervakar"},
+ {id:"fordism",t:"Fordism",f:2,b:"F2 bild 20",d:"Taylorismen kombinerad med löpande bandet, så att tekniken styr arbetstakten"},
+ {id:"byrakr",t:"Byråkrati",f:2,b:"F2 bild 13, 28",d:"Regelstyrning där korrekthet är viktigast, men som är dålig på kriser och förändring"},
+ {id:"soctek",t:"Socioteknisk organisation",f:2,b:"F2 bild 26",d:"Bygger på teori Y: självstyrande grupper, arbetsberikning och arbetsutvidgning"},
+ {id:"lean",t:"Lean organisering",f:2,b:"F2 bild 24",d:"Effektivisera och ta bort slöseri, med team, små moment, standardisering och målstyrning"},
+ {id:"agil",t:"Agil organisation",f:2,b:"F2 bild 29",d:"Lean plus socioteknik: självstyrande små team i tidsbegränsade projekt, kreativitet med effektivitet"},
+ {id:"lar",t:"Lärande organisation",f:2,b:"F2 bild 28",d:"Anpassning som ledord: lösa roller, ständig utveckling och normativ styrning"},
+ {id:"normstyr",t:"Normativ styrning",f:2,b:"F2 bild 11 (faktaruta 5.1)",d:"De anställda tar in samma värderingar och mål som organisationen och styr sig själva"},
+ {id:"malstyr",t:"Målstyrning",f:2,b:"F2 bild 11 (faktaruta 5.1)",d:"De anställda har eget ansvar för att nå övergripande mål, inte för hur det görs"},
+ /* --- F3 Klass --- */
+ {id:"yrkesstr",t:"Yrkesstruktur",f:3,b:"F3",d:"Hur arbetskraften fördelas på olika yrken i ett samhälle, och hur det förändras över tid"},
+ {id:"likupp",t:"Liknande arbetsuppgifter",f:3,b:"F3 (SSYK)",d:"Huvudprincipen för att kategorisera yrken i SSYK: yrken med samma sorts uppgifter grupperas"},
+ {id:"utbkrav",t:"Utbildningskrav",f:3,b:"F3 (SSYK)",d:"Princip för att rangordna yrken efter vilken utbildningsnivå arbetet kräver"},
+ {id:"chefpos",t:"Chefsposition",f:3,b:"F3 (SSYK)",d:"Princip för att skilja ut yrken där man leder andra och har ansvar för personal"},
+ {id:"prestige",t:"Yrkesprestige",f:3,b:"F3 bild 3, 10",d:"Hur högt anseende och status ett yrke har, en rangordning som är stabil (Treiman)"},
+ {id:"arbkon",t:"Arbetskontrakt",f:3,b:"F3 (Goldthorpe)",d:"Direkt kontroll: lön för utfört arbete i lätt övervakade och standardiserade uppgifter"},
+ {id:"tjrel",t:"Tjänsterelation",f:3,b:"F3 (Goldthorpe)",d:"Indirekt kontroll: framtida belöningar för lojalitet när arbetet är svårt att övervaka"},
+ {id:"overv",t:"Övervakningssvårigheter",f:3,b:"F3 (Goldthorpe, Wright)",d:"Hur svårt det är för arbetsgivaren att se och direkt styra hur arbetet utförs"},
+ {id:"orgspec",t:"Organisationsspecifik kunskap",f:3,b:"F3 (Goldthorpe)",d:"Kompetens som bara är värdefull i den egna organisationen och växer med tiden där"},
+ {id:"exploat",t:"Exploatering",f:3,b:"F3 (Wright, Marx)",d:"Kapitalägaren tjänar på arbetarens arbete, vilket skapar en intressekonflikt mellan dem"},
+ {id:"genkun",t:"Generell kunskap",f:3,b:"F3 (Wright)",d:"Experters sällsynta och eftertraktade kompetens, som många arbetsgivare vill ha"},
+ {id:"cheflo",t:"Chefers organisationslojalitet",f:3,b:"F3 (Wright)",d:"Chefer får del av vinsten och mer makt för att hålla arbetsgivarens sida mot de underordnade"},
+ /* --- F4 Strukturomvandlingar och flexibilitet --- */
+ {id:"kunsam",t:"Kunskapssamhället",f:4,b:"F4 bild 2",d:"Kunskap och skicklighet blir viktigare resurser än fysiskt kapital (Bell)"},
+ {id:"tjsam",t:"Tjänstesamhället",f:4,b:"F4 bild 4–7",d:"De flesta arbetar i den tertiära sektorn med tjänster, inte i jordbruk eller industri"},
+ {id:"paradigm",t:"Teknologiskt paradigm",f:4,b:"F4 bild 10–11",d:"Den rådande uppsättningen tekniker och metoder, som gradvis ersätts av en ny"},
+ {id:"indpar",t:"Industriella paradigmet",f:4,b:"F4 bild 13–14",d:"Problemet är standardisering i stor skala, lösningen taylorism och fordism"},
+ {id:"itpar",t:"IT-paradigmet",f:4,b:"F4 bild 15–16",d:"Problemet är anpassning till en föränderlig marknad, lösningen lärande och flexibla organisationer"},
+ {id:"teklog",t:"Teknisk arbetslogik",f:4,b:"F4 bild 30–33 (Oesch)",d:"Övre klasser är lojala mot sin kunskap, lägre styrs av produktionsprocessen och maskinen"},
+ {id:"orglog",t:"Organisatorisk arbetslogik",f:4,b:"F4 bild 30–33 (Oesch)",d:"Övre klasser är lojala mot organisationen, lägre styrs av hierarkin uppifrån"},
+ {id:"mellog",t:"Mellanmänsklig arbetslogik",f:4,b:"F4 bild 30–33 (Oesch)",d:"Övre klasser är lojala mot klienten, lägre styrs av kunden eller klienten"},
+ {id:"numflex",t:"Numerisk flexibilitet",f:4,b:"F4 (Atkinson)",d:"Organisationen ändrar antalet anställda efter behov, t.ex. med visstid och bemanning"},
+ {id:"funkflex",t:"Funktionell flexibilitet",f:4,b:"F4 (Atkinson)",d:"De anställda breddar sina uppgifter och roterar mellan dem efter behov"},
+ {id:"flexorg",t:"Flexibel organisation",f:4,b:"F4 (Atkinson)",d:"En kärna av fast anställda med breda uppgifter och en periferi som tas in efter behov"},
+ {id:"granslos",t:"Gränslöst arbete",f:4,b:"F4 (Gillberg)",d:"Gränserna mellan arbete och fritid suddas ut i tid och plats, och individen måste dra dem själv"},
+ /* --- F5 Arbetsliv och kön --- */
+ {id:"genus",t:"Genus",f:5,b:"F5 bild 3–4",d:"Socialt kön: hur vi blir kvinnor och män genom normer och socialisering"},
+ {id:"konreg",t:"Könad regim",f:5,b:"F5 bild 5–6 (Connell)",d:"En organisations mönster av könsuppdelning och hierarki, där manlig aktivitet värderas högre"},
+ {id:"mnorm",t:"Mannen som norm",f:5,b:"F5 bild 7",d:"Det manliga ses som standard och det kvinnliga som avvikelse, t.ex. ”damfotboll”"},
+ {id:"horseg",t:"Horisontell segregering",f:5,b:"F5 bild 9",d:"Kvinnor och män arbetar i olika yrken, sektorer och sysslor"},
+ {id:"vertseg",t:"Vertikal segregering",f:5,b:"F5 bild 11",d:"Kvinnor och män finns på olika hierarkiska nivåer, t.ex. fler män som chefer"},
+ {id:"obetalt",t:"Betalt och obetalt arbete",f:5,b:"F5 bild 22, 30",d:"Lönearbete jämfört med hushållsarbete och omsorg om barn, som kvinnor gör mer av"},
+ {id:"utbud",t:"Utbudsteorier",f:5,b:"F5 bild 33–34",d:"Lönegapet förklaras av skillnader i individens produktivitet och preferenser"},
+ {id:"eftfr",t:"Efterfrågeteorier",f:5,b:"F5 bild 33, 35",d:"Lönegapet förklaras av arbetsgivaren och strukturen, t.ex. diskriminering och normer"},
+ {id:"facetime",t:"Face-time",f:5,b:"F5 bild 36–37 (Goldin)",d:"Krav på att synas på plats och vara tillgänglig för kunder och möten, som belönas i lön"},
+ {id:"tidskr",t:"Tidskrävande arbetsvillkor",f:5,b:"F5 bild 39–41 (Magnusson & Nermo)",d:"Övertid, resor, ledningsansvar och tillgänglighet, som höjer lönen men krockar med familjen"},
+ /* --- F6 Etnicitet och diskriminering --- */
+ {id:"neokl",t:"Neoklassiska perspektivet",f:6,b:"F6 bild 14–15",d:"Skillnader i utfall förklaras på individnivå av skillnader i produktivitet och humankapital"},
+ {id:"postkol",t:"Postkoloniala perspektivet",f:6,b:"F6 bild 16",d:"Skillnader förklaras av maktstrukturer där svenskhet och vithet är norm (vi och de andra)"},
+ {id:"kultras",t:"Kulturell rasism",f:6,b:"Bursell 2019",d:"En statisk syn på etnicitet där svenskhet värderas högre än andra kulturer"},
+ {id:"medb",t:"Medborgerlig stratifiering",f:6,b:"F6 bild 17",d:"Migrationspolitik och regler för medborgarskap ger grupper olika rättigheter och chanser"},
+ {id:"mighist",t:"Migrantgruppens historia",f:6,b:"F6 bild 17",d:"Hur det gått för dem som kom tidigare, och vilka nätverk som finns, påverkar nya migranter"},
+ {id:"humkap",t:"Humankapitalteorin",f:6,b:"F6 bild 18",d:"Utbildning och erfarenhet höjer produktiviteten, som avgör lön och position"},
+ {id:"landsp",t:"Landspecifikt humankapital",f:6,b:"F6 bild 20",d:"Språk, nätverk och kunskap om arbetsmarknaden, som delvis går förlorat vid flytt"},
+ {id:"intersek",t:"Intersektionalitet",f:6,b:"F6 bild 23",d:"Klass, kön och etnicitet samverkar och kan förstärka varandra"},
+ {id:"prefd",t:"Preferensdiskriminering",f:6,b:"F6 bild 25–26",d:"Arbetsgivare, kunder eller kollegor ogillar en grupp och vill inte ha den"},
+ {id:"statd",t:"Statistisk diskriminering",f:6,b:"F6 bild 25, 27",d:"Gruppens genomsnitt används i brist på information om individen"},
+ {id:"impld",t:"Implicit diskriminering",f:6,b:"F6 bild 25, 28",d:"Man behandlar grupper olika utan att vara medveten om det"},
+ {id:"strukd",t:"Strukturell diskriminering",f:6,b:"F6 bild 25",d:"Normer och rutiner i organisationer stänger indirekt ute underordnade grupper"},
+ {id:"korr",t:"Korrespondenstest",f:6,b:"F6 bild 30",d:"Fiktiva ansökningar med lika meriter men olika namn eller kön skickas till riktiga jobb"},
+ {id:"rekr",t:"Rekrytering utan diskriminering",f:6,b:"F6 bild 36 · DO 2023",d:"Tydliga krav, genomtänkt rekryteringsform, anonyma ansökningar och koll på fördomar"},
+ /* --- Arbetsmarknadspolitik (ingen föreläsning ännu) --- */
+ {id:"svmod",t:"Svenska modellen",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Parterna sköter regleringen själva genom kollektivavtal i samförstånd, med liten roll för staten"},
+ {id:"nordisk",t:"Nordisk modell",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Starka parter, partsreglering via kollektivavtal, ingen lagstadgad minimilön, få men stora konflikter"},
+ {id:"kontin",t:"Kontinental modell",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Kollektivavtal plus tvingande lagstiftning, ofta en lagstadgad minimilön"},
+ {id:"anglo",t:"Anglosaxisk modell",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Decentraliserade förhandlingar och svaga parter, reglering via staten och domstolspraxis"},
+ {id:"kollav",t:"Kollektivavtal",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Skriftligt avtal mellan facket och arbetsgivarna om löner och villkor, som även gäller icke-medlemmar"},
+ {id:"orggrad",t:"Organisationsgrad",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Hur stor andel av de anställda som är med i facket (eller arbetsgivare i arbetsgivarorganisationer)"},
+ {id:"samf",t:"Samförståndsanda",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Saltsjöbadsandan: parterna löser konflikter genom förhandling, utan statlig inblandning"},
+ {id:"konfl",t:"Arbetsmarknadskonflikter",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Strejker från arbetstagarna och lockouter från arbetsgivarna, förbjudna under avtalsperioden"},
+ {id:"market",t:"Märket",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Industrins avtal sätter normen för löneökningar och blir riktmärke för andra sektorer"},
+ {id:"valfard",t:"Välfärdsstat",f:null,a:"Arbetsmarknadspolitik",b:"Esser & Sjöberg 2014",d:"Staten finansierar och producerar centrala välfärdstjänster och socialförsäkringar"}
+];
+const BGRP={vilja:"norm ideologi socsam alien",teori:"behov ration rattvisa affektiv instrum normloj",kk:"krav egenk aktiv passiv hogstr lagstr",
+  ad:"vertad horad berik utvidg",led:"xled yled normstyr malstyr byrakr",mot:"intrins extrins introj identif integr internal autkon",org:"taylor fordism byrakr soctek lean agil lar",
+  ssyk:"yrkesstr likupp utbkrav chefpos prestige",gw:"arbkon tjrel overv orgspec exploat genkun cheflo",
+  par:"kunsam tjsam paradigm indpar itpar",log:"teklog orglog mellog",flex:"numflex funkflex flexorg granslos",
+  persp:"neokl postkol kultras medb mighist humkap landsp intersek",disk:"prefd statd impld strukd korr rekr"};
+const lcFirst=s=>/^[A-ZÅÄÖ][a-zåäö]/.test(s)?s.charAt(0).toLowerCase()+s.slice(1):s;
+(function buildBegrQ(){
+  const area=b=>b.a||("F"+b.f+" · "+(LECT.find(x=>x.n===b.f)||{}).title);
+  const grp=b=>Object.values(BGRP).filter(g=>g.split(" ").includes(b.id)).flatMap(g=>g.split(" "));
+  const same=b=>{const g=grp(b),inG=BEGR.filter(o=>o!==b&&g.includes(o.id)),rest=BEGR.filter(o=>o!==b&&!g.includes(o.id)&&area(o)===area(b));
+    return shuffle(inG).concat(shuffle(rest));};
+  const opts=(right,wrong)=>{const o=shuffle([right].concat(wrong));return {o,a:o.indexOf(right)};};
+  BEGR.forEach(b=>{
+    const r="Begreppslista · "+b.b, base={f:b.f,s:b.f?null:"begr",bg:true,t:b.t,r,type:"mc",chk:true,
+      why:b.t+": "+b.d+"."};
+    const w1=same(b).slice(0,3), x=opts(b.t,w1.map(o=>o.t));
+    Q.push({...base,id:"bg-"+b.id+"-1",l:1,q:"Vilket begrepp beskrivs? "+b.d+".",o:x.o,a:x.a,
+      alt:"Jämför med de andra: "+w1.map(o=>o.t+" = "+lcFirst(o.d)).join(". ")+"."});
+    const w2=same(b).slice(0,3), y=opts(b.d,w2.map(o=>o.d));
+    Q.push({...base,id:"bg-"+b.id+"-2",l:2,q:"Vad innebär "+lcFirst(b.t)+"?",o:y.o,a:y.a,
+      alt:"Felalternativen hör till andra begrepp: "+w2.map(o=>o.t).join(", ")+"."});
+  });
+})();
+
 
 
 const I={
@@ -2087,11 +2310,11 @@ function renderHome(){
   const goal=dailyGoal(), dn=todayDone(), gp=Math.min(100,Math.round(100*dn/goal));
   const todayHtml=dl>=0?`<section class="today"><div class="hd"><h3>Dagens pass</h3><span class="n">${dn} / ${goal} frågor</span></div>
      <div class="meter"><i style="width:${gp}%"></i></div>
-     <p>${dn>=goal?`<span class="done">Dagens mål klart.</span> Mer träning nu ger extra marginal.`:`Mål räknat mot tentan ${esc(COURSE.examTxt)}: svaga punkter först, sedan nya frågor och repetition.`}${dl<=4?" Gör minst en tentasimulering idag.":""}</p>
+     <p>${dn>=goal?`<span class="done">Dagens mål klart.</span> Mer träning nu ger extra marginal.`:`Mål räknat mot tentan ${esc(COURSE.examTxt)}: svaga punkter först, sedan nya frågor och repetition.`}${dl<=4?" Gör exempeltentan idag.":""}</p>
      <button class="btn wide" style="--c:var(--orange)" data-today="1">${dn?"Fortsätt dagens pass":"Starta dagens pass"}</button></section>`:"";
   const ex=state.exams||[], lastEx=ex[ex.length-1], bestEx=ex.reduce((b,x)=>!b||x.got/x.max>b.got/b.max?x:b,null);
-  const exCard=`<div class="xcard" style="--c:var(--red);--p:${lastEx?Math.round(100*lastEx.got/lastEx.max):0}"><div class="ring"><button class="node sm" data-exam="1" aria-label="Tentasimulering"><b>70</b></button></div>
-      <div class="cap">Tentasimulering<span>${lastEx?`Senast ${lastEx.got}/${lastEx.max} p · bäst ${Math.round(100*bestEx.got/bestEx.max)} %`:"70 p, tid, inget facit förrän efteråt"}</span></div></div>`;
+  const exCard=`<div class="xcard" style="--c:var(--red);--p:${lastEx?Math.round(100*lastEx.got/lastEx.max):0}"><div class="ring"><button class="node sm" data-exam="1" aria-label="Exempeltenta"><b>ET</b></button></div>
+      <div class="cap">Exempeltenta<span>${lastEx?`Senast ${lastEx.got}/${lastEx.max} p · bäst ${Math.round(100*bestEx.got/bestEx.max)} %`:`${pickExam().reduce((a,q)=>a+qPts(q),0)} p, tid, facit efteråt`}</span></div></div>`;
   const wkHtml=wk.length?`<div class="group">${wk.map(w=>`<div class="row"><span class="dot"></span><span class="t">${esc(w.t)}<span class="r">${esc([...w.refs].join(", "))} · ${w.open} fråga${w.open>1?"r":""} kvar</span></span><span class="pct">${w.rate} %<small style="display:block;font:600 11px var(--f-text);color:var(--muted);text-align:right">fel</small></span></div>`).join("")}</div>
     <div style="margin-top:14px"><button class="btn wide" style="--c:var(--red)" data-weak="1">Träna svaga punkter</button></div>`
     :`<div class="group"><p class="note">Begrepp du svarar fel på hamnar här. De försvinner när du svarar rätt direkt i en senare omgång.</p></div>`;
@@ -2114,9 +2337,11 @@ function renderHome(){
 }
 function sheetOpen(html){const s=$("#sheet");s.hidden=false;s.className="sheet card slide";$("#sheetIn").innerHTML=html;$("#closeS").onclick=hideSheet;}
 function examSheet(){
-  sheetOpen(`<div class="lvl-card" style="--c:var(--red)"><h3>Tentasimulering</h3>
-   <p>Cirka 70 poäng med tentans frågetyper: flerval, para ihop, lucktext, välj flera, sant/falskt med motivering och två korta skrivuppgifter. Inget facit förrän efteråt, och motiveringen ger bara poäng om sant/falskt var rätt. Klockan går.</p></div>
-   <button class="btn wide" style="--c:var(--red)" id="go">Starta provet</button>
+  const qs=pickExam(), p=qs.reduce((a,q)=>a+qPts(q),0), nt=qs.filter(q=>q.type==="text").length;
+  sheetOpen(`<div class="lvl-card" style="--c:var(--red)"><h3>Exempeltenta</h3>
+   <p>Lärarens exempel på tentafrågor från de senaste terminerna: ${qs.length-nt} matchnings- och lucktextfrågor och ${nt} essäfrågor, ${p} poäng. Klockan går. Essäerna rättar du själv mot lärarens bedömningspunkter och exempelsvar. Facit för matchningen kommer efteråt.</p>
+   <p>Tentan har också flervalsfrågor och sant/falskt. Dem tränar du i föreläsningarna, Tentarundan och Tenta 24/25.</p></div>
+   <button class="btn wide" style="--c:var(--red)" id="go">Starta exempeltentan</button>
    <button class="linkbtn" id="closeS">Stäng</button>`);
   $("#go").onclick=()=>startLesson("exam");
 }
@@ -2129,11 +2354,13 @@ function levelSheet(k){
   const t=TR[k],qs=byTrack(k),m=masteryOf(qs),open=qs.length>0,n=qs.length,per=Math.min(t.size,n);
   const lv=[1,2,3].filter(l=>qs.some(q=>q.l===l)).map(l=>{const p=masteryOf(qs.filter(q=>q.l===l));
     return `<div class="lv"><span>${LVL[l]}</span><div class="meter"><i style="width:${p}%"></i></div><b>${p} %</b></div>`;}).join("");
+  const blist=k==="begr"?[...new Set(BEGR.map(x=>x.a||("F"+x.f+" · "+(LECT.find(l=>l.n===x.f)||{}).title)))].map(ar=>{const bs=BEGR.filter(x=>(x.a||("F"+x.f+" · "+(LECT.find(l=>l.n===x.f)||{}).title))===ar);
+    return `<div class="plist"><b>${esc(ar)}</b>${bs.map(x=>`<div class="prow"><span>${esc(x.t)}</span>${esc(x.d)}</div>`).join("")}</div>`;}).join(""):"";
   const plist=k==="pers"?LECT.map(x=>{const ps=PERS.filter(p=>p.f===x.n);return ps.length?`<div class="plist"><b>F${x.n} · ${esc(x.title)}</b>${ps.map(p=>`<div class="prow"><span>${esc(p.n)}</span>${esc(p.k)}</div>`).join("")}</div>`:"";}).join(""):"";
   const parts=t.parts?`<div class="parts">${t.parts.map(pt=>{const kk=k+"."+pt.p,pq=byTrack(kk),pm=masteryOf(pq);
     return `<div class="part"><div class="ph"><b>${esc(pt.name)}</b><span>${pq.length} frågor · ${pm} %</span></div><div class="meter"><i style="width:${pm}%"></i></div>
       <p>${esc(pt.desc)}</p><button class="btn wide" style="--c:${t.c}" data-part="${kk}"${pq.length?"":" disabled"}>${pm?"Fortsätt":"Starta"}</button></div>`;}).join("")}</div>`:"";
-  sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>${plist}
+  sheetOpen(`<div class="lvl-card" style="--c:${t.c}"><h3>${esc(t.lect?"F"+t.lect+" · "+t.name:t.name)}</h3><p>${esc(t.desc)}</p>${plist}${blist}
      ${t.lect&&lv?`<div class="lvls">${lv}</div>`:`<div class="meter"><i style="width:${m}%"></i></div>`}
      <p style="font-size:13px">${open?`${m} % av ${n} frågor klara · ${per} frågor per omgång`:"Inga frågor än."}</p></div>
    ${parts}${open?`<button class="btn wide${t.parts?" plain":""}" style="--c:${t.c}" id="${t.parts?"mix":"go"}">${t.parts?"Blanda båda":m?"Fortsätt":"Starta"}</button>`:""}
@@ -2143,7 +2370,7 @@ function levelSheet(k){
 }
 
 /* ---------- poäng och dagens pass ---------- */
-function qPts(q){return q.type==="tfw"?3:q.type==="multi"?2:q.type==="match"?q.items.length:q.type==="cloze"?clozeAns(q).length:q.type==="text"?3:1;}
+function qPts(q){return q.pt?q.pt:q.type==="tfw"?3:q.type==="multi"?2:q.type==="match"?q.items.length:q.type==="cloze"?clozeAns(q).length:q.type==="text"?3:1;}
 function rightText(q){
   if(q.type==="mc") return q.o[q.a];
   if(q.type==="multi") return q.a.map(i=>q.o[i]).join(" · ");
@@ -2153,7 +2380,7 @@ function rightText(q){
   if(q.type==="cloze") return clozeAns(q).join(" · ");
   return q.pts.join(" · ");
 }
-const studyPool=()=>Q.filter(q=>q.f||q.s==="t24");
+const studyPool=()=>Q.filter(q=>q.f||q.s==="t24"||q.s==="begr");
 function todayDone(){return state.dn&&state.dn.d===today()?state.dn.n:0;}
 function dailyGoal(){
   const left=studyPool().filter(q=>st(q.id).box===0).length, dl=daysLeft();
@@ -2172,14 +2399,7 @@ function pickToday(){
 }
 let EX=null, exTimer=null;
 function pickExam(){
-  const pool=Q.filter(q=>q.l>=2&&q.s!=="aberg"&&q.p!=="quiz"&&q.type!=="text"), pick=[];
-  const take=(arr,n)=>{shuffle(arr).filter(q=>!pick.includes(q)).slice(0,n).forEach(q=>pick.push(q));};
-  take(pool.filter(q=>q.type==="tfw"),3); take(pool.filter(q=>q.type==="match"),4);
-  take(pool.filter(q=>q.type==="multi"),2); take(pool.filter(q=>q.type==="cloze"),1);
-  let pts=pick.reduce((a,q)=>a+qPts(q),0)+6;
-  for(const q of shuffle(pool.filter(q=>q.type==="mc"))){if(pts>=70)break;if(!pick.includes(q)){pick.push(q);pts++;}}
-  const tx=shuffle(Q.filter(q=>q.type==="text")).slice(0,2);
-  return shuffle(pick).concat(tx);
+  return Q.filter(q=>q.s==="ex");
 }
 const mmss=ms=>{const t=Math.floor(ms/1000);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");};
 function examPoint(p){
@@ -2245,7 +2465,7 @@ function renderQ(){
     let bi=0; const txt=esc(q.text).replace(/\{([^}]+)\}/g,()=>`<button class="blank" data-b="${bi++}">&nbsp;</button>`);
     body=`<div class="cloze" id="cloze">${txt}</div><div class="bank" id="bank">${cur.bank.map((w,i)=>`<button class="chip" data-w="${i}">${esc(w)}</button>`).join("")}</div>`;
   } else {
-    body=`<textarea id="txt" placeholder="Skriv ditt svar som på tentan, max 50–100 ord."></textarea>
+    body=`<textarea id="txt" placeholder="Skriv ditt svar som på tentan. Håll dig inom ordgränsen i frågan."></textarea>
       <div id="ptsBox"></div><p class="hint">Skrivfråga. Jämför sedan med facitpunkterna och kryssa bara i det du faktiskt fick med.</p>`;
   }
   $("#app").innerHTML=`<div class="lesson-top"><button class="x" id="quit" aria-label="Avsluta omgången">${I.close}</button><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>${EX?`<span class="extime" id="exT">${mmss(Date.now()-EX.start)}</span>`:""}</div>
@@ -2330,7 +2550,7 @@ function check(){
 }
 function showPoints(){
   answered=true; $("#txt").readOnly=true;
-  $("#ptsBox").innerHTML=`<ul class="pts">${cur.q.pts.map((p,i)=>`<li><label><input type="checkbox" id="pt${i}"><span>${esc(p)}</span></label></li>`).join("")}</ul>`;
+  $("#ptsBox").innerHTML=`<ul class="pts">${cur.q.pts.map((p,i)=>`<li><label><input type="checkbox" id="pt${i}"><span>${esc(p)}</span></label></li>`).join("")}</ul>${cur.q.ex?`<details class="exans"><summary>Lärarens exempelsvar</summary><p>${esc(cur.q.ex)}</p></details>`:""}`;
   const s=$("#sheet"); s.className="sheet";
   $("#sheetIn").innerHTML=`<button class="btn wide" id="grade">Klar med rättningen</button>`;
   $("#grade").onclick=()=>{
@@ -2338,7 +2558,7 @@ function showPoints(){
     const missing=cur.q.pts.filter((_,i)=>!$("#pt"+i).checked);
     document.querySelectorAll(".pts input").forEach(i=>i.disabled=true);
     const ok=got===n; record(ok,`${got}/${n} punkter`,true);
-    if(EX) return examPoint(Math.round(3*got/n));
+    if(EX) return examPoint(Math.round(qPts(cur.q)*got/n));
     feedback(ok,{got,n,missing});
   };
   $("#ptsBox").scrollIntoView({behavior:"smooth",block:"start"});
@@ -2385,7 +2605,7 @@ function renderExamSum(){
   const lost=EX.log.filter(x=>x.p<x.max);
   $("#app").innerHTML=`<section class="sum">
     <div class="trophy pop">${I.trophy}</div>
-    <h2>Tentasimulering klar</h2>
+    <h2>Exempeltentan klar</h2>
     <div class="score">${EX.got}<small> / ${EX.max} p</small></div>
     <div class="tiles">
       <div class="tile" style="--c:var(--teal)"><div class="h">Andel</div><b>${pct}%</b></div>
@@ -2395,7 +2615,7 @@ function renderExamSum(){
     ${lost.length?`<div style="width:100%;text-align:left"><h3 class="section-h">Tappade poäng</h3><div class="group">${lost.map(x=>`<div class="row exrow"><span class="dot"></span><span class="t">${esc(x.q.q)}<span class="r"><b>Rätt:</b> ${esc(rightText(x.q))}<br>${esc(x.q.r)}</span></span><span class="pct">${x.p}/${x.max}</span></div>`).join("")}</div>
       <p class="foot">Frågorna med fel hamnar under svaga punkter.</p></div>`:""}
     <button class="btn wide good" id="home">Fortsätt</button>
-    <button class="btn wide plain" id="again">Ny tentasimulering</button>
+    <button class="btn wide plain" id="again">Gör om exempeltentan</button>
   </section>`;
   EX=null;
   $("#home").onclick=()=>{screen="home";render();};
