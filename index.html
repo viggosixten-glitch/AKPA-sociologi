@@ -2933,7 +2933,7 @@ const flower=(x,y,c)=>`<g transform="translate(${x} ${y})"><circle r="2.6" class
 function greeting(){const h=new Date().getHours();return h<10?"God morgon!":h<18?"Hej!":"God kväll!";}
 function renderHome(){
   hideSheet();
-  const keys=LECT.map(x=>"f"+x.n).concat(["next","final"]);
+  const keys=LECT.map(x=>"f"+x.n).concat(["final"]);
   const app=$("#app"),cs=getComputedStyle(app);
   const avail=app.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
   const W=Math.max(260,Math.min(420,Math.floor(avail)||320)), STEP=140, TOP=96;
